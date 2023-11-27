@@ -29,6 +29,18 @@ const typeDefs = `#graphql
 const resolvers = {
   Query: {
     login: async (_, { username, password }, { db }) => {
+      if (!username || username == '') {
+        throw new GraphQLError('Username is required', {
+          extensions: { code: 'Bad Request' },
+        });
+      }
+
+      if (!password || password == '') {
+        throw new GraphQLError('Password is required', {
+          extensions: { code: 'Bad Request' },
+        });
+      }
+      
       const hashedPassword = hashPassword(password);
       const user = await User.getDetail({ username, password: hashedPassword, db });
       if (user) {
