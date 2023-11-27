@@ -1,5 +1,5 @@
 const { BSON } = require("mongodb");
-const { hashPassword } = require("../helpers/bcryptjs");
+const { hashPassword, comparePassword } = require("../helpers/bcryptjs");
 const { signToken } = require("../helpers/jwt");
 const User = require("../models/user");
 const { GraphQLError } = require("graphql");
@@ -40,18 +40,25 @@ const resolvers = {
           extensions: { code: 'Bad Request' },
         });
       }
-      
-      const hashedPassword = hashPassword(password);
-      const user = await User.getDetail({ username, password: hashedPassword, db });
-      if (user) {
-        const token = signToken({ id: user.id });
+      const user = await User.getDetail({ username, db });
+      console.log(user._id);
 
-        return { access_token: token };
-      } else {
+      if (!user) {
+        throw new GraphQLError('User is not exist', {
+          extensions: { code: 'Not Found' },
+        });
+      }
+
+      const isMatch = comparePassword(password, user.password);
+
+      if (!isMatch) {
         throw new GraphQLError('Invalid username/password', {
           extensions: { code: 'Unauthenticated' },
         });
       }
+    
+      const token = signToken({ id: user._id });
+      return { access_token: token };
     }
   },
   Mutation: {

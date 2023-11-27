@@ -1,5 +1,3 @@
-const { connect } = require("../config/mongo");
-
 class User {
     static async create({ name, username, email, password, db }) {
         try {
@@ -14,10 +12,10 @@ class User {
         }
     }
 
-    static async getDetail({ username, password, db }) {
+    static async getDetail({ username, db }) {
         try {
             const Users = db.collection("users"); 
-            const user = await Users.findOne({username, password});
+            const user = await Users.findOne({username});
      
             return user;
         } catch (error) {
