@@ -1,3 +1,7 @@
+if (process.env.NODE_ENV !== "production") {
+    require('dotenv').config();
+}
+
 const { ApolloServer } = require('@apollo/server');
 const { startStandaloneServer } = require('@apollo/server/standalone');
 
@@ -14,7 +18,10 @@ startStandaloneServer(server, {
     listen: { port: 3000 },
     context: async ({ req, res }) => ({
         db: await connect(),
-        isAuthenticated : verifyToken(req.headers.authorization ? req.headers.authorization.split(' ').at(-1) : 'NotExist')
+        isAuthenticated : () => {
+            const access_token = req.headers.authorization ? req.headers.authorization.split(' ').at(-1) : 'NotExist';
+            return verifyToken(access_token);
+        }
     }), 
 }).then(({ url }) => {
     console.log(`🚀  Server ready at: ${url}`);
