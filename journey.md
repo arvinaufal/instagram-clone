@@ -4,16 +4,16 @@
 
 ### Setup Project: Tema Aplikasi, Apollo Server, GraphQL
 Silahkan setup project aplikasi server kamu:
-- [ ] Install MongoDB database pada komputer kamu atau menggunakan MongoDB Atlas
-- [ ] Install package yang dibutuhkan: @apollo/server, graphql dan mongodb sebagai MongoDB driver
-- [ ] Pilih tema sesuai dengan pilihan dan kesepakatan instructor, tuliskan dalam README github kamu
-- [ ] Buatlah aplikasi server GraphQL menggunakan Apollo Server dengan PORT default: 3000
+- [x] Install MongoDB database pada komputer kamu atau menggunakan MongoDB Atlas
+- [x] Install package yang dibutuhkan: @apollo/server, graphql dan mongodb sebagai MongoDB driver
+- [x] Pilih tema sesuai dengan pilihan dan kesepakatan instructor, tuliskan dalam README github kamu
+- [x] Buatlah aplikasi server GraphQL menggunakan Apollo Server dengan PORT default: 3000
 
 
 ### GraphQL - Apollo Server
 Buatlah Aplikasi server GraphQL dengan menggunakan Apollo Server yang memiliki fungsi sebagai berikut:
-- [ ] Register (Mutation)
-- [ ] Login (Query)
+- [x] Register (Mutation)
+- [x] Login (Query)
 - [ ] Get Post (Query)
 - [ ] Add Post (Mutation)
 - [ ] Comment Post (Mutation)
@@ -24,8 +24,8 @@ Buatlah Aplikasi server GraphQL dengan menggunakan Apollo Server yang memiliki f
 
 ### MongoDB 1
 Buatlah fungsi/method pada aplikasi server GraphQL kamu yang menghubungkan dengan database MongoDB dengan fungsi sebagai berikut:
-- [ ] Add user: untuk kebutuhan register
-- [ ] Get user by username dan password: untuk kebutuhan login
+- [x] Add user: untuk kebutuhan register
+- [x] Get user by username dan password: untuk kebutuhan login
 - [ ] Search users by name/username: untuk kebutuhan mencari user berdasarkan nama atau username
 - [ ] Follow User: untuk kebutuhan memfollow user
 - [ ] Get User by Id: untuk menampilkan profile user
