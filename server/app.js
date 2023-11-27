@@ -14,7 +14,7 @@ startStandaloneServer(server, {
     listen: { port: 3000 },
     context: async ({ req, res }) => ({
         db: await connect(),
-        // isAuthenticated : verifyToken((req.headers.authorization.split(' ').at(-1)))
+        isAuthenticated : verifyToken(req.headers.authorization ? req.headers.authorization.split(' ').at(-1) : 'NotExist')
     }), 
 }).then(({ url }) => {
     console.log(`🚀  Server ready at: ${url}`);

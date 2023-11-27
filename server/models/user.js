@@ -13,6 +13,17 @@ class User {
             throw error
         }
     }
+
+    static async getDetail({ username, password, db }) {
+        try {
+            const Users = db.collection("users"); 
+            const user = await Users.findOne({username, password});
+     
+            return user;
+        } catch (error) {
+            throw error
+        }
+    }
 }
 
 module.exports = User;
