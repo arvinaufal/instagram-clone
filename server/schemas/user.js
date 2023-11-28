@@ -1,3 +1,4 @@
+const { ObjectId } = require("mongodb");
 const { hashPassword, comparePassword } = require("../helpers/bcryptjs");
 const { signToken } = require("../helpers/jwt");
 const { emailFormat, passwordValidation } = require("../helpers/validation");
@@ -18,6 +19,7 @@ const typeDefs = `#graphql
   }
 
   type Query {
+    user(userId: String!): User
     searchUser(q: String!): [User]
   }
   
@@ -29,10 +31,20 @@ const typeDefs = `#graphql
 
 const resolvers = {
   Query: {
+    user: async (_, { userId }, { authentication }) => {
+      try {
+        await authentication();
+        const user = await User.getById({ id: new ObjectId(userId) });
+
+        return user;
+      } catch (err) {
+        throw err;
+      }
+    },
     searchUser: async (_, { q }, { authentication }) => {
       try {
         await authentication();
-        const users = await User.getByQ({q});
+        const users = await User.getByQ({ q });
 
         return users;
       } catch (err) {
