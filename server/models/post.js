@@ -1,3 +1,4 @@
+const { ObjectId } = require("mongodb");
 const { getDB } = require("../config/mongo");
 
 class Post {
@@ -15,6 +16,15 @@ class Post {
         await Posts.insertOne(newPost);
 
         return newPost;
+    }
+
+    static async addComment({content, postId, authorId}) {
+        const date = new Date();
+        let newComment = { content, authorId, createdAt: date, updatedAt: date };
+        const Posts = getDB().collection('posts');
+        const test = await Posts.findOneAndUpdate({ _id: postId }, { $addToSet: { comments: newComment } });
+        console.log({test});
+        return newComment;
     }
 
     // static async getDetail({ username, db }) {
