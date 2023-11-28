@@ -47,8 +47,15 @@ const typeDefs = `#graphql
 
 const resolvers = {
   Query: {
-    posts: async () => {
-      return 'test'
+    posts: async (_, __, { authentication }) => {
+      try {
+        await authentication();
+        const posts = await Post.getAll();
+
+        return posts;
+      } catch (err) {
+        throw err;
+      }
     }
   },
   Mutation: {
@@ -56,10 +63,10 @@ const resolvers = {
       try {
         const { authorId } = await authentication();
         const newPost = await Post.create({ content, tags, imgUrl, authorId });
-        
+
         return newPost;
       } catch (err) {
-        throw err
+        throw err;
       }
     }
   }
