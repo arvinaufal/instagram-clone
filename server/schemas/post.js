@@ -1,5 +1,7 @@
+const { ObjectId } = require("mongodb");
 const { hashPassword, comparePassword } = require("../helpers/bcryptjs");
 const { signToken } = require("../helpers/jwt");
+const authentication = require("../middlewares/authentication");
 const Post = require("../models/post");
 const { GraphQLError } = require("graphql");
 
@@ -12,6 +14,19 @@ const typeDefs = `#graphql
   }
 
   type Likes {
+    authorId: ID!
+    createdAt: String
+    updatedAt: String
+  }
+
+  input CommentsInput {
+    content: String!
+    authorId: ID!
+    createdAt: String
+    updatedAt: String
+  }
+
+  input LikesInput {
     authorId: ID!
     createdAt: String
     updatedAt: String
@@ -38,10 +53,14 @@ const typeDefs = `#graphql
       content: String,
       tags: [String],
       imgUrl: String,
-      authorId: String,
-      # comments: Array,
-      # likes: Array,
+      comments: [CommentsInput],
+      likes: [LikesInput],
     ): Post
+
+    addComment(
+      content: String
+      postId: ID
+    ): Comments
   }
 `;
 
@@ -62,13 +81,24 @@ const resolvers = {
     addPost: async (_, { content, tags, imgUrl }, { authentication }) => {
       try {
         const { authorId } = await authentication();
-        const newPost = await Post.create({ content, tags, imgUrl, authorId });
+        const newPost = await Post.create({ content, tags, imgUrl, authorId: new ObjectId(authorId) });
 
         return newPost;
       } catch (err) {
         throw err;
       }
+    },
+    addComment: async(_, { content, postId }, { authentication }) => {
+      try {
+        const { authorId } = await authentication();
+        const newComment = await Post.addComment({ content, postId: new ObjectId(postId), authorId: new ObjectId(authorId) });
+
+        return newComment;
+      } catch (err) {
+        throw err;
+      }
     }
+
   }
 };
 
