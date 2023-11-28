@@ -31,6 +31,19 @@ class User {
 
         return user;
     }
+
+
+    static async getByQ({ q }) {
+        const Users = getDB().collection('users');
+        const users = await Users.find({
+            $or: [
+                { name: { $regex: new RegExp(q, 'i') }},
+                { username: { $regex: new RegExp(q, 'i') }},
+            ]
+        }).toArray();
+
+        return users;
+    }
 }
 
 module.exports = User;
