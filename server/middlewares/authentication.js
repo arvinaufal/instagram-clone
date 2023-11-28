@@ -1,9 +1,10 @@
 const User = require('../models/user');
 
-const authentication = async (token) => {
+const authentication = async (req) => {
+    const accessToken = req.headers.authorization.split(' ').at(-1);
     try {
-        if (!token) throw ({ name: "Unauthenticated" });
-        const { id } = verifyToken(token);
+        if (!accessToken) throw ({ name: "Unauthenticated" });
+        const { id } = verifyToken(accessToken);
         const user = await User.findOne({ _id: id });
         if (!user) throw ({ name: "Unauthenticated" });
 

@@ -27,14 +27,7 @@ connect().then(() => {
         // }),
         context: ({ req }) => {
             return {
-                authentication: async () => {
-                    const accessToken = req.headers.authorization.split(' ').at(-1);
-                    try { 
-                        return await authentication(accessToken);
-                    } catch (err) {
-                        throw err;
-                    }
-                }
+                authentication: async () => await authentication(req),
             }
         }
 
