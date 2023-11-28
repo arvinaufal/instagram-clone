@@ -1,6 +1,13 @@
 const { getDB } = require("../config/mongo");
 
 class Post {
+    static async getAll() {
+        const Posts = getDB().collection("posts");
+        const posts = await Posts.find().toArray();
+        
+        return posts;
+    }
+
     static async create({ content, tags, imgUrl, authorId }) {
         const date = new Date();
         let newPost = { content, tags, imgUrl, authorId, createdAt: date, updatedAt: date };
