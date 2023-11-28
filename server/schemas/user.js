@@ -18,7 +18,7 @@ const typeDefs = `#graphql
   }
 
   type Query {
-    getUser: String
+    searchUser(q: String!): [User]
   }
   
   type Mutation {
@@ -29,8 +29,15 @@ const typeDefs = `#graphql
 
 const resolvers = {
   Query: {
-    getUser: () => {
-      console.log('hello world')
+    searchUser: async (_, { q }, { authentication }) => {
+      try {
+        await authentication();
+        const users = await User.getByQ({q});
+
+        return users;
+      } catch (err) {
+        throw err;
+      }
     }
   },
   Mutation: {
