@@ -14,6 +14,12 @@ const typeDefs = `#graphql
     password: String!
   }
 
+  type Follow {
+    _id: ID
+    followerId: ID
+    followingId: ID
+  }
+
   type Token {
     accessToken: String
   }
@@ -26,6 +32,7 @@ const typeDefs = `#graphql
   type Mutation {
     login( username: String, password: String ): Token
     register( name: String, username: String, email: String, password: String): User
+    follow(followingId: String, followerId: String): Follow
   }
 `;
 
@@ -124,6 +131,18 @@ const resolvers = {
         }
 
         return { accessToken: signToken({ userId: user._id }) };
+      } catch (err) {
+        throw err;
+      }
+    },
+
+
+    follow: async (_, { followingId }, { authentication }) => {
+      try {
+        const { authorId } = await authentication();
+        const follow = await User.follow({ followingId: new ObjectId(followingId), followerId: new ObjectId(authorId) });
+
+        return follow;
       } catch (err) {
         throw err;
       }

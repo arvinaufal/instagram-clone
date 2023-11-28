@@ -24,7 +24,6 @@ class User {
         return user;
     }
 
-
     static async getById({ id }) {
         const Users = getDB().collection("users");
         const user = await Users.findOne({ _id: id });
@@ -36,12 +35,21 @@ class User {
         const Users = getDB().collection('users');
         const users = await Users.find({
             $or: [
-                { name: { $regex: new RegExp(q, 'i') }},
-                { username: { $regex: new RegExp(q, 'i') }}
+                { name: { $regex: new RegExp(q, 'i') } },
+                { username: { $regex: new RegExp(q, 'i') } }
             ]
         }).toArray();
 
         return users;
+    }
+
+    static async follow({ followingId, followerId }) {
+        const date = new Date();
+
+        const Follow = getDB().collection('follows');
+        const follow = await Follow.insertOne({ followingId, followerId, createdAt: date, updatedAt: date });
+
+        return follow;
     }
 }
 
