@@ -15,10 +15,21 @@ class User {
         }
     }
 
-    static async getDetail({ username }) {
+    static async getByUsername({ username }) {
         try {
             const Users = getDB().collection("users");
             const user = await Users.findOne({ username });
+
+            return user;
+        } catch (error) {
+            throw error
+        }
+    }
+
+    static async getByEmail({ email }) {
+        try {
+            const Users = getDB().collection("users");
+            const user = await Users.findOne({ email });
 
             return user;
         } catch (error) {

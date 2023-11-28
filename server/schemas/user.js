@@ -1,5 +1,6 @@
 const { hashPassword, comparePassword } = require("../helpers/bcryptjs");
 const { signToken } = require("../helpers/jwt");
+const { emailFormat, passwordValidation } = require("../helpers/validation");
 const User = require("../models/user");
 const { GraphQLError } = require("graphql");
 
@@ -35,6 +36,39 @@ const resolvers = {
   Mutation: {
     register: async (_, { name, username, email, password }, { db }) => {
       try {
+
+        //validation unique email
+        let emailExist = await User.getByEmail({ email });
+        if (emailExist) {
+          throw new GraphQLError('Email has been exist', {
+            extensions: { code: 'Bad Request' },
+          });
+        }
+
+        //validation unique username
+        let usernameExist = await User.getByUsername({ username });
+        if (usernameExist) {
+          throw new GraphQLError('Username has been exist', {
+            extensions: { code: 'Bad Request' },
+          });
+        }
+
+        //validation email format
+        const isEmail = emailFormat(email);
+        if (!isEmail) {
+          throw new GraphQLError('Use a valid Email format', {
+            extensions: { code: 'Bad Request' },
+          });
+        }
+
+        //validation password length
+        const isMinLength = passwordValidation(password);
+        if (!isMinLength) {
+          throw new GraphQLError('Password min 5 characters', {
+            extensions: { code: 'Bad Request' },
+          });
+        }
+
         const hashedPassword = hashPassword(password);
         const newUser = await User.create({ name, username, email, password: hashedPassword, db });
         return newUser;
@@ -65,7 +99,6 @@ const resolvers = {
         }
 
         const isMatch = comparePassword(password, user.password);
-
         if (!isMatch) {
           throw new GraphQLError('Invalid username/password', {
             extensions: { code: 'Unauthenticated' },
