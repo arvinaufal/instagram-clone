@@ -34,9 +34,8 @@ const resolvers = {
     }
   },
   Mutation: {
-    register: async (_, { name, username, email, password }, { db }) => {
+    register: async (_, { name, username, email, password }) => {
       try {
-
         //validation unique email
         let emailExist = await User.getByEmail({ email });
         if (emailExist) {
@@ -70,7 +69,7 @@ const resolvers = {
         }
 
         const hashedPassword = hashPassword(password);
-        const newUser = await User.create({ name, username, email, password: hashedPassword, db });
+        const newUser = await User.create({ name, username, email, password: hashedPassword });
         return newUser;
       } catch (err) {
         throw err;
@@ -90,7 +89,7 @@ const resolvers = {
             extensions: { code: 'Bad Request' },
           });
         }
-        const user = await User.getDetail({ username });
+        const user = await User.getByUsername({ username });
 
         if (!user) {
           throw new GraphQLError('User is not exist', {
@@ -105,7 +104,7 @@ const resolvers = {
           });
         }
 
-        return { accessToken: signToken({ UserId: user._id }) };
+        return { accessToken: signToken({ userId: user._id }) };
       } catch (err) {
         throw err;
       }

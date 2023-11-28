@@ -47,19 +47,19 @@ const typeDefs = `#graphql
 
 const resolvers = {
   Query: {
-    posts: async() => {
+    posts: async () => {
       return 'test'
     }
   },
   Mutation: {
-    addPost: async (_, {  content, tags, imgUrl, authorId, }, { db, isAuthenticated }) => {
+    addPost: async (_, { content, tags, imgUrl }, { authentication }) => {
       try {
-        console.log(isAuthenticated);
-        // const hashedPassword = hashPassword(password);
-        // const newUser = await User.create({ name, username, email, password: hashedPassword, db });
-        // return newUser;
-      } catch (error) {
-        console.log(error);
+        const { authorId } = await authentication();
+        const newPost = await Post.create({ content, tags, imgUrl, authorId });
+        
+        return newPost;
+      } catch (err) {
+        throw err
       }
     }
   }
