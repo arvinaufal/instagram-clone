@@ -98,7 +98,6 @@ const resolvers = {
         throw err;
       }
     }
-
   }
 };
 
