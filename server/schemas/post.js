@@ -6,17 +6,24 @@ const Post = require("../models/post");
 const { GraphQLError } = require("graphql");
 
 const typeDefs = `#graphql
+  type UserRef {
+    name: String
+    username: String!
+  }
+
   type Comments {
     content: String!
     authorId: ID!
     createdAt: String
     updatedAt: String
+    user: UserRef
   }
 
   type Likes {
     authorId: ID!
     createdAt: String
     updatedAt: String
+    user: UserRef
   }
 
   input CommentsInput {
