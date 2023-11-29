@@ -21,7 +21,6 @@ const typeDefs = `#graphql
   }
 
   type Like {
-    _id: ID
     authorId: ID!
   }
 
@@ -38,7 +37,7 @@ const typeDefs = `#graphql
     login( username: String, password: String ): Token
     register( name: String, username: String, email: String, password: String): User
     follow(followingId: String): Follow
-    like(authorId: String): Like
+    like(postId: String): Like
   }
 `;
 
@@ -147,15 +146,34 @@ const resolvers = {
         const { authorId } = await authentication();
         const data = { followingId: new ObjectId(followingId), followerId: new ObjectId(authorId) };
         const followed = await User.getFollowing(data);
-      
+
         if (!followed) {
           const follow = await User.follow(data);
-          
+
           return follow;
         }
 
-        await User.deleteFollowing(data);
+        await User.unfollow(data);
         return followed;
+      } catch (err) {
+        throw err;
+      }
+    },
+
+    like: async (_, { postId }, { authentication }) => {
+      try {
+        const { authorId } = await authentication();
+        const data = { authorId: new ObjectId(authorId), postId: new ObjectId(postId) };
+        const liked = await User.getLiked(data);
+
+        if (!liked) {
+          const like = await User.like(data);
+
+          return like;
+        }
+
+        await User.unlike(data);
+        return liked;
       } catch (err) {
         throw err;
       }
