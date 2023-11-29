@@ -46,6 +46,7 @@ const typeDefs = `#graphql
 
   type Query {
     posts: [Post]
+    postsById(postId: String): Post
   }
   
   type Mutation {
@@ -75,6 +76,16 @@ const resolvers = {
       } catch (err) {
         throw err;
       }
+    },
+    postsById: async (_, { postId }, { authentication }) => {
+      try {
+        await authentication();
+        const post = await Post.getDetail({ postId: new ObjectId(postId) });
+
+        return post;
+      } catch (err) {
+        throw err;
+      }
     }
   },
   Mutation: {
@@ -88,7 +99,7 @@ const resolvers = {
         throw err;
       }
     },
-    addComment: async(_, { content, postId }, { authentication }) => {
+    addComment: async (_, { content, postId }, { authentication }) => {
       try {
         const { authorId } = await authentication();
         const newComment = await Post.addComment({ content, postId: new ObjectId(postId), authorId: new ObjectId(authorId) });

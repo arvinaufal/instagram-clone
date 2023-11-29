@@ -27,16 +27,16 @@ class Post {
         return newComment;
     }
 
-    // static async getDetail({ username, db }) {
-    //     try {
-    //         const Users = db.collection("users"); 
-    //         const user = await Users.findOne({username});
+    static async getDetail({ postId }) {
+        try {
+            const Posts = getDB().collection("posts");
+            const post = await Posts.findOne({ _id: postId });
 
-    //         return user;
-    //     } catch (error) {
-    //         throw error
-    //     }
-    // }
+            return post;
+        } catch (error) {
+            throw error
+        }
+    }
 }
 
 module.exports = Post;
