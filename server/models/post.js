@@ -23,7 +23,7 @@ class Post {
         let newComment = { content, authorId, createdAt: date, updatedAt: date };
         const Posts = getDB().collection('posts');
         const test = await Posts.findOneAndUpdate({ _id: postId }, { $addToSet: { comments: newComment } });
-        console.log({test});
+
         return newComment;
     }
 

@@ -16,8 +16,13 @@ const typeDefs = `#graphql
 
   type Follow {
     _id: ID
-    followerId: ID
-    followingId: ID
+    followerId: ID!
+    followingId: ID!
+  }
+
+  type Like {
+    _id: ID
+    authorId: ID!
   }
 
   type Token {
@@ -32,7 +37,8 @@ const typeDefs = `#graphql
   type Mutation {
     login( username: String, password: String ): Token
     register( name: String, username: String, email: String, password: String): User
-    follow(followingId: String, followerId: String): Follow
+    follow(followingId: String): Follow
+    like(authorId: String): Like
   }
 `;
 
@@ -136,13 +142,20 @@ const resolvers = {
       }
     },
 
-
     follow: async (_, { followingId }, { authentication }) => {
       try {
         const { authorId } = await authentication();
-        const follow = await User.follow({ followingId: new ObjectId(followingId), followerId: new ObjectId(authorId) });
+        const data = { followingId: new ObjectId(followingId), followerId: new ObjectId(authorId) };
+        const followed = await User.getFollowing(data);
+      
+        if (!followed) {
+          const follow = await User.follow(data);
+          
+          return follow;
+        }
 
-        return follow;
+        await User.deleteFollowing(data);
+        return followed;
       } catch (err) {
         throw err;
       }

@@ -47,9 +47,22 @@ class User {
         const date = new Date();
 
         const Follow = getDB().collection('follows');
-        const follow = await Follow.insertOne({ followingId, followerId, createdAt: date, updatedAt: date });
+        const newFollow = { followingId, followerId, createdAt: date, updatedAt: date };
+        await Follow.insertOne(newFollow);
 
-        return follow;
+        return newFollow;
+    }
+
+    static async getFollowing({ followingId, followerId }) {
+        const Follow = getDB().collection('follows');
+        const following = await Follow.find({ $and: [{ followingId }, { followerId }] }).toArray();
+        return following.length === 0 ? false : following[0];
+    }
+
+
+    static async deleteFollowing({ followingId, followerId }) {
+        const Follow = getDB().collection('follows');
+        await Follow.deleteOne({ $and: [{ followingId }, { followerId }] });
     }
 }
 
