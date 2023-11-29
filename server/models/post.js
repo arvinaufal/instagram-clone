@@ -5,7 +5,7 @@ class Post {
     static async getAll() {
         const Posts = getDB().collection("posts");
         const posts = await Posts.find().toArray();
-        
+
         return posts;
     }
 
@@ -18,11 +18,11 @@ class Post {
         return newPost;
     }
 
-    static async addComment({content, postId, authorId}) {
+    static async addComment({ content, postId, authorId }) {
         const date = new Date();
         let newComment = { content, authorId, createdAt: date, updatedAt: date };
         const Posts = getDB().collection('posts');
-        const test = await Posts.findOneAndUpdate({ _id: postId }, { $addToSet: { comments: newComment } });
+        await Posts.findOneAndUpdate({ _id: postId }, { $addToSet: { comments: newComment } });
 
         return newComment;
     }

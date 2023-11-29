@@ -55,14 +55,42 @@ class User {
 
     static async getFollowing({ followingId, followerId }) {
         const Follow = getDB().collection('follows');
-        const following = await Follow.find({ $and: [{ followingId }, { followerId }] }).toArray();
-        return following.length === 0 ? false : following[0];
+        const following = await Follow.findOne({ $and: [{ followingId }, { followerId }] });
+        return !following ? false : following;
     }
 
-
-    static async deleteFollowing({ followingId, followerId }) {
+    static async unfollow({ followingId, followerId }) {
         const Follow = getDB().collection('follows');
         await Follow.deleteOne({ $and: [{ followingId }, { followerId }] });
+    }
+
+    static async getLiked({ authorId, postId }) {
+        const Post = getDB().collection('posts');
+        const post = await Post.findOne({ _id: postId });
+        if (!post.likes) return false;
+        if (post.likes.length < 1) return false;
+        const liked = post.likes.find(({ authorId }) => authorId);
+        if (!liked) return false;
+
+        return liked;
+    }
+
+    static async like({ authorId, postId }) {
+        const date = new Date();
+
+        const Post = getDB().collection('posts');
+        const newLike = { authorId, createdAt: date, updatedAt: date };
+        await Post.findOneAndUpdate({ _id: postId }, { $addToSet: { likes: newLike } });
+
+        return newLike;
+    }
+
+    static async unlike({ authorId, postId }) {
+        const Post = getDB().collection('posts');
+        await Post.updateOne(
+            { _id: postId },
+            { $pull: { likes: { authorId } } }
+        );
     }
 }
 
