@@ -20,7 +20,7 @@ Buatlah Aplikasi server GraphQL dengan menggunakan Apollo Server yang memiliki f
 - [x] Search User (Query)
 - [x] Follow (Mutation)
 - [x] Get User (Query)
-- [ ] Like Post (Mutation)
+- [x] Like Post (Mutation)
 
 ### MongoDB 1
 Buatlah fungsi/method pada aplikasi server GraphQL kamu yang menghubungkan dengan database MongoDB dengan fungsi sebagai berikut:
@@ -31,9 +31,9 @@ Buatlah fungsi/method pada aplikasi server GraphQL kamu yang menghubungkan denga
 - [x] Get User by Id: untuk menampilkan profile user
 - [x] Add Post: untuk menambahkan post baru
 - [x] Get Posts: mengambil daftar post berdasarkan yang terbaru
-- [ ] Get Post by Id: mengambil post berdasarkan id
+- [x] Get Post by Id: mengambil post berdasarkan id
 - [x] Comment Post: untuk menambahkan komentar pada post
-- [ ] Like Post: untuk menambahkan like pada post
+- [x] Like Post: untuk menambahkan like pada post
 
 
 ## Day 2
