@@ -44,15 +44,15 @@ Buatlah lookup/relasi pada method/fungsi yang berhubungan dengan MongoDB yang su
   - [x] Menampilkan nama/username user pada data komentar
   - [x] Menampilkan nama/username user pada data like
 
-- [ ] Get User by Id: untuk menampilkan profile user
-  - [ ] Menampilkan list nama/username user follower
-  - [ ] Menampilkan list nama/username user following
+- [x] Get User by Id: untuk menampilkan profile user
+  - [x] Menampilkan list nama/username user follower
+  - [x] Menampilkan list nama/username user following
 
 
 ### Redis - Cache
 Implementasikan cache pada aplikasi GraphQL server yang sudah dibuat dengan detail sebagai berikut:
-- [ ] Implementasikan cache pada Get Post (Query)
-- [ ] Invalidate cache pada Add Post (Mutation)
+- [x] Implementasikan cache pada Get Post (Query)
+- [x] Invalidate cache pada Add Post (Mutation)
 
 ## Day 3
 ### React Native
