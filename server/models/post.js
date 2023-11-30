@@ -73,7 +73,8 @@ class Post {
                             },
                             {
                                 $project: {
-                                    password: 0
+                                    password: 0,
+                                    email: 0
                                 }
                             }
                         ],

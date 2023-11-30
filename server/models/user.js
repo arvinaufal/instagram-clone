@@ -190,7 +190,7 @@ class User {
         const post = await Post.findOne({ _id: postId });
         if (!post.likes) return false;
         if (post.likes.length < 1) return false;
-        const liked = post.likes.find(({ authorId }) => authorId);
+        const liked = post.likes.find((el) => el.authorId.toString() === authorId.toString());   
         if (!liked) return false;
 
         return liked;
