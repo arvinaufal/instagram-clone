@@ -4,6 +4,7 @@ const { signToken } = require("../helpers/jwt");
 const authentication = require("../middlewares/authentication");
 const Post = require("../models/post");
 const { GraphQLError } = require("graphql");
+const redis = require("../config/redis");
 
 const typeDefs = `#graphql
   type UserRef {
@@ -76,10 +77,21 @@ const resolvers = {
   Query: {
     posts: async (_, __, { authentication }) => {
       try {
-        await authentication();
-        const posts = await Post.getAll();
+        const { authorId } = await authentication();
+        const postsCache = await redis.get(`${authorId}:posts:all`);
+        let res;
 
-        return posts;
+        if (postsCache) {
+          res = JSON.parse(postsCache);
+        } else {
+          
+          const posts = await Post.getAll();
+          await redis.set(`${authorId}:posts:all`, JSON.stringify(posts));
+          
+          res = posts;
+        }
+
+        return res;
       } catch (err) {
         throw err;
       }
@@ -100,6 +112,7 @@ const resolvers = {
       try {
         const { authorId } = await authentication();
         const newPost = await Post.create({ content, tags, imgUrl, authorId: new ObjectId(authorId) });
+        await redis.del(`${authorId}:posts:all`);
 
         return newPost;
       } catch (err) {

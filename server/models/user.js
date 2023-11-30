@@ -26,127 +26,51 @@ class User {
 
     static async getById({ id }) {
         const Users = getDB().collection("users");
-        // const user = await Users.findOne({ _id: id });
         const user = await Users.aggregate([
             {
                 $match: { _id: id }
             },
             {
-                $lookup: {
+                $lookup:
+                  {
                     from: "follows",
-                    let: { userId: "$_id" },
-                    pipeline: [
-                        {
-                            $match: {
-                                $expr: { $eq: ["$followerId", "$$userId"] }
-                            }
-                        },
-                    ],
-                    as: "followsEr"
-                }
-            },
-            {
-                $lookup: {
-                    from: "follows",
-                    let: { userId: "$_id" },
-                    pipeline: [
-                        {
-                            $match: {
-                                $expr: { $eq: ["$followingId", "$$userId"] }
-                            }
-                        },
-                    ],
-                    as: "followsIng"
-                }
-            },
-            {
-                $unwind: { path: "$followsEr", preserveNullAndEmptyArrays: true },
-            },
-            {
-                $unwind: { path: "$followsIng", preserveNullAndEmptyArrays: true },
-            },
-            {
-                $lookup: {
-                    from: "users",
-                    let: { userId: "$followsIng.followerId" },
-                    pipeline: [
-                        {
-                            $match: {
-                                $expr: { $eq: ["$_id", "$$userId"] }
-                            }
-                        },
-                        {
-                            $project: {
-                                password: 0,
-                                email: 0
-                            }
-                        }
-                    ],
-                    as: "followings"
-                }
-            },
-            {
-                $lookup: {
-                    from: "users",
-                    let: { userId: "$followsEr.followingId" },
-                    pipeline: [
-                        {
-                            $match: {
-                                $expr: { $eq: ["$_id", "$$userId"] }
-                            }
-                        },
-                        {
-                            $project: {
-                                password: 0,
-                                email: 0
-                            }
-                        }
-                    ],
+                    localField: "_id",
+                    foreignField: "followerId",
                     as: "followers"
-                }
-            },
+                  }
+             },
             {
-                $group: {
-                    _id: "$_id",
-                    name: { $first: "$name" },
-                    username: { $first: "$username" },
-                    email: { $first: "$email" },
-                    followers: { $addToSet: "$followers" },
-                    followings: { $addToSet: "$followings" }
-                }
-            },
+                $lookup:
+                  {
+                    from: "follows",
+                    localField: "_id",
+                    foreignField: "followingId",
+                    as: "followings"
+                  }
+             },
             {
-                $project: {
-                    "_id": 1,
-                    "name": 1,
-                    "username": 1,
-                    "email": 1,
-                    "followers": {
-                        $map: {
-                            input: "$followers",
-                            as: "follower",
-                            in: {
-                                _id: { $arrayElemAt: ["$$follower._id", 0] },
-                                name: { $arrayElemAt: ["$$follower.name", 0] },
-                                username: { $arrayElemAt: ["$$follower.username", 0] },
-                            }
-                        }
-                    },
-                    "followings": {
-                        $map: {
-                            input: "$followings",
-                            as: "following",
-                            in: {
-                                _id: { $arrayElemAt: ["$$following._id", 0] },
-                                name: { $arrayElemAt: ["$$following.name", 0] },
-                                username: { $arrayElemAt: ["$$following.username", 0] },
-                            }
-                        }
-                    }
+                $lookup:
+                  {
+                    from: "users",
+                    localField: "followers.followingId",
+                    foreignField: "_id",
+                    as: "followers"
+                  }
+             },
+            {
+                $lookup:
+                  {
+                    from: "users",
+                    localField: "followings.followerId",
+                    foreignField: "_id",
+                    as: "followings"
+                  }
+             },
+             {
+                $project : {
+                    password: 0,
                 }
-            },
-
-
+             }
         ]).toArray();
 
         return user[0];
