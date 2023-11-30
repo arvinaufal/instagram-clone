@@ -175,7 +175,6 @@ const resolvers = {
 
         if (!liked) {
           const like = await User.like(data);
-
           return like;
         }
 
