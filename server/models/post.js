@@ -28,114 +28,110 @@ class Post {
     }
 
     static async getDetail({ postId }) {
-        try {
-            const Posts = getDB().collection("posts");
+        const Posts = getDB().collection("posts");
 
-            const post = await Posts.aggregate([
-                {
-                    $match: { _id: postId }
-                },
-                {
-                    $unwind: { path: "$comments", preserveNullAndEmptyArrays: true },
-                },
-                {
-                    $lookup: {
-                        from: "users",
-                        let: { authorId: "$comments.authorId" },
-                        pipeline: [
-                            {
-                                $match: {
-                                    $expr: { $eq: ["$_id", "$$authorId"] }
-                                }
-                            },
-                            {
-                                $project: {
-                                    password: 0,
-                                    email: 0
-                                }
-                            }
-                        ],
-                        as: "comments.user"
-                    }
-                },
-                {
-                    $unwind: { path: "$likes", preserveNullAndEmptyArrays: true },
-                },
-                {
-                    $lookup: {
-                        from: "users",
-                        let: { authorId: "$likes.authorId" },
-                        pipeline: [
-                            {
-                                $match: {
-                                    $expr: { $eq: ["$_id", "$$authorId"] }
-                                }
-                            },
-                            {
-                                $project: {
-                                    password: 0,
-                                    email: 0
-                                }
-                            }
-                        ],
-                        as: "likes.user"
-                    }
-                },
-                {
-                    $group: {
-                        _id: "$_id",
-                        content: { $first: "$content" },
-                        tags: { $first: "$tags" },
-                        imgUrl: { $first: "$imgUrl" },
-                        authorId: { $first: "$authorId" },
-                        createdAt: { $first: "$createdAt" },
-                        updatedAt: { $first: "$updatedAt" },
-                        likes: { $addToSet: "$likes" },
-                        comments: { $push: "$comments" }
-                    }
-                },
-                {
-                    $project: {
-                        "_id": 1,
-                        "content": 1,
-                        "tags": 1,
-                        "imgUrl": 1,
-                        "authorId": 1,
-                        "createdAt": 1,
-                        "updatedAt": 1,
-                        "comments": {
-                            $map: {
-                                input: "$comments",
-                                as: "comment",
-                                in: {
-                                    content: "$$comment.content",
-                                    authorId: "$$comment.authorId",
-                                    createdAt: "$$comment.createdAt",
-                                    updatedAt: "$$comment.updatedAt",
-                                    user: { $arrayElemAt: ["$$comment.user", 0] }
-                                }
+        const post = await Posts.aggregate([
+            {
+                $match: { _id: postId }
+            },
+            {
+                $unwind: { path: "$comments", preserveNullAndEmptyArrays: true },
+            },
+            {
+                $lookup: {
+                    from: "users",
+                    let: { authorId: "$comments.authorId" },
+                    pipeline: [
+                        {
+                            $match: {
+                                $expr: { $eq: ["$_id", "$$authorId"] }
                             }
                         },
-                        "likes": {
-                            $map: {
-                                input: "$likes",
-                                as: "like",
-                                in: {
-                                    authorId: "$$like.authorId",
-                                    createdAt: "$$like.createdAt",
-                                    updatedAt: "$$like.updatedAt",
-                                    user: { $arrayElemAt: ["$$like.user", 0] }
-                                }
+                        {
+                            $project: {
+                                password: 0,
+                                email: 0
+                            }
+                        }
+                    ],
+                    as: "comments.user"
+                }
+            },
+            {
+                $unwind: { path: "$likes", preserveNullAndEmptyArrays: true },
+            },
+            {
+                $lookup: {
+                    from: "users",
+                    let: { authorId: "$likes.authorId" },
+                    pipeline: [
+                        {
+                            $match: {
+                                $expr: { $eq: ["$_id", "$$authorId"] }
+                            }
+                        },
+                        {
+                            $project: {
+                                password: 0,
+                                email: 0
+                            }
+                        }
+                    ],
+                    as: "likes.user"
+                }
+            },
+            {
+                $group: {
+                    _id: "$_id",
+                    content: { $first: "$content" },
+                    tags: { $first: "$tags" },
+                    imgUrl: { $first: "$imgUrl" },
+                    authorId: { $first: "$authorId" },
+                    createdAt: { $first: "$createdAt" },
+                    updatedAt: { $first: "$updatedAt" },
+                    likes: { $addToSet: "$likes" },
+                    comments: { $push: "$comments" }
+                }
+            },
+            {
+                $project: {
+                    "_id": 1,
+                    "content": 1,
+                    "tags": 1,
+                    "imgUrl": 1,
+                    "authorId": 1,
+                    "createdAt": 1,
+                    "updatedAt": 1,
+                    "comments": {
+                        $map: {
+                            input: "$comments",
+                            as: "comment",
+                            in: {
+                                content: "$$comment.content",
+                                authorId: "$$comment.authorId",
+                                createdAt: "$$comment.createdAt",
+                                updatedAt: "$$comment.updatedAt",
+                                user: { $arrayElemAt: ["$$comment.user", 0] }
+                            }
+                        }
+                    },
+                    "likes": {
+                        $map: {
+                            input: "$likes",
+                            as: "like",
+                            in: {
+                                authorId: "$$like.authorId",
+                                createdAt: "$$like.createdAt",
+                                updatedAt: "$$like.updatedAt",
+                                user: { $arrayElemAt: ["$$like.user", 0] }
                             }
                         }
                     }
-                },
-            ]).toArray();
+                }
+            },
+        ]).toArray();
 
-            return post[0];
-        } catch (error) {
-            throw error
-        }
+        return post[0];
     }
 }
 
