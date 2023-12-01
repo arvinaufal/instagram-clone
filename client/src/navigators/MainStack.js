@@ -4,6 +4,7 @@ import Login from "../screens/Auth/Login";
 import Register from "../screens/Auth/Register";
 import { useContext } from "react";
 import { LoginContext } from "../context/LoginContext";
+import Home from "../screens/Home/Home";
 
 const Stack = createNativeStackNavigator();
 
@@ -25,6 +26,13 @@ export default function MainStack() {
                         headerShown: false,
                     }}
                     component={Register}
+                />
+                <Stack.Screen
+                    name="Home"
+                    options={{
+                        headerShown: false,
+                    }}
+                    component={Home}
                 />
             </Stack.Navigator>
         </NavigationContainer>

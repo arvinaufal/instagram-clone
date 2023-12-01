@@ -2,7 +2,6 @@ import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import { useState } from "react";
 import { Ionicons } from '@expo/vector-icons'
 export default function FormAuth({ changeIsTyping, changeIsPasswordShown, type, isPasswordShown }) {
-
     const [form, setForm] = useState({
         name: '',
         username: '',
@@ -41,6 +40,7 @@ export default function FormAuth({ changeIsTyping, changeIsPasswordShown, type, 
                     onChangeText={(text) => setForm({ ...form, email: text })}
                     value={form.email}
                     placeholder="Email"
+                    inputMode="email"
                     onFocus={() => changeIsTyping(true)}
                     onBlur={() => changeIsTyping(false)}
                 />
