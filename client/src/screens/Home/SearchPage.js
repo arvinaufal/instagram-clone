@@ -7,43 +7,44 @@ import Post from '../../components/Layouts/Post';
 import BottomSheet from 'react-native-simple-bottom-sheet';
 import CHeader from '../../components/Elements/Header';
 import CFooter from '../../components/Elements/Footer';
+import { gql, useQuery, useLazyQuery } from '@apollo/client';
+
+const SEARCH_USER = gql`
+query SearchUser($q: String!) {
+  searchUser(q: $q) {
+    _id
+    name
+    username
+  }
+}
+`;
+
 
 export default function SearchPage({ navigation }) {
     const page = 'SearchPage';
-   
+    const [getSearch, { loading, error, data }] = useLazyQuery(SEARCH_USER);
+    const [accounts, setAccounts] = useState([]);
     const panelRef = useRef(null);
     const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
     const [formSearch, setFormSearch] = useState({
         q: ''
     });
-    useEffect(() => {
-        if (panelRef.current) {
-            //    panelRef.current.togglePanel()
-
-        }
-    }, []);
-
-    let Posts = [];
-    for (let index = 0; index < 4; index++) {
-        Posts.push(Post);
-    }
 
     useEffect(() => {
         if (formSearch.q !== '') {
-            console.log({formSearch});
+            getSearch({ variables: formSearch });
         }
-    }, [formSearch]);
+
+        if (data) {
+            setAccounts(data.searchUser);
+        }
+        if (formSearch.q === '') {
+            setAccounts([]);
+        }
+    }, [formSearch.q, getSearch]);
 
     return (
-
         <View className="flex bg-white min-h-screen ">
-            {/* <KeyboardAvoidingView
-                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-                style={{ flex: 1 }}
-            > */}
-
-
-
             <CHeader />
 
             <View className="flex-1 w-full my-2" style={{ flex: 1 }}>
@@ -62,7 +63,7 @@ export default function SearchPage({ navigation }) {
                                 }}
                                 value={formSearch.q}
                                 placeholder="Search ..."
-                             
+
                             />
                         </View>
 
@@ -71,25 +72,47 @@ export default function SearchPage({ navigation }) {
                 <ScrollView>
 
                     <View className="flex bg-white pb-2 w-full">
-                        <View className="flex flex-row w-full mr-4 justify-between">
-                            <View className="w-3/6 mx-3 my-2 flex-row">
-                                <View className="w-8 h-8 rounded-full overflow-hidden">
-                                    <Image
-                                        source={require('../../assets/images/dummy_img1.jpg')}
-                                        style={{ width: '100%', height: '100%' }}
-                                    />
+                        {/* <View className="flex flex-row w-full mr-4 justify-between"> */}
+                        {
+                            accounts.length > 0
+                                ?
+                                accounts.map((account) => (
+
+                                    <View className="flex flex-row w-full mr-4 justify-between" key={account._id}>
+                                        <View className="w-3/6 mx-3 my-2 flex-row">
+                                            <View className="w-8 h-8 rounded-full overflow-hidden">
+                                                <Image
+                                                    source={{ uri: `https://cdn-icons-png.flaticon.com/512/149/149071.png` }}
+                                                    style={{ width: '100%', height: '100%' }}
+                                                />
+                                            </View>
+                                            <View className="flex justify-center px-2">
+                                                <Text className="font-semibold">{account.username}</Text>
+                                            </View>
+                                        </View>
+                                        <View className="w-24 mx-2 flex justify-center">
+                                            <View className="mr-8 bg-slate-200 rounded-md h-6 flex  w-20  items-center justify-center">
+                                                <Text className="text-center text-black">Following</Text>
+                                            </View>
+                                        </View>
+                                    </View>
+                                ))
+                                :
+                                <View className="flex justify-center content-center w-full items-center">
+
+                                    <Text className="font-semibold text-md mt-4">Cari user ...</Text>
                                 </View>
-                                <View className="flex justify-center px-2">
-                                    <Text className="font-semibold">arvinaufal</Text>
-                                </View>
-                            </View>
-                            <View className="w-24 mx-2 flex justify-center">
+
+
+                        }
+
+                        {/* <View className="w-24 mx-2 flex justify-center">
                                 <View className="mr-8 bg-sky-600 rounded-md h-6 flex  w-20  items-center justify-center">
                                     <Text className="text-center text-white">Follow</Text>
                                 </View>
-                            </View>
-                        </View>
-                        <View className="flex flex-row w-full mr-4 justify-between">
+                            </View> */}
+                        {/* </View> */}
+                        {/* <View className="flex flex-row w-full mr-4 justify-between">
                             <View className="w-3/6 mx-3 my-2 flex-row">
                                 <View className="w-8 h-8 rounded-full overflow-hidden">
                                     <Image
@@ -106,7 +129,7 @@ export default function SearchPage({ navigation }) {
                                     <Text className="text-center text-black">Following</Text>
                                 </View>
                             </View>
-                        </View>
+                        </View> */}
                     </View>
 
                 </ScrollView>
@@ -116,8 +139,6 @@ export default function SearchPage({ navigation }) {
             <View className={`bg-white border-t-slate-200 flex flex-row justify-around items-center `} style={{ height: '8%', borderTopWidth: 1 }}>
                 <CFooter navigation={navigation} />
             </View>
-            {/* </KeyboardAvoidingView> */}
-
 
         </View>
     )
