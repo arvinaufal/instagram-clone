@@ -50,6 +50,7 @@ const typeDefs = `#graphql
     likes: [Likes]
     createdAt: String
     updatedAt: String
+    author: [UserRef]
   }
 
   type Query {
@@ -78,6 +79,7 @@ const resolvers = {
     posts: async (_, __, { authentication }) => {
       try {
         const { authorId } = await authentication();
+        await redis.del(`${authorId}:posts:all`); //INI NANTI TOLONG DIHAPUS
         const postsCache = await redis.get(`${authorId}:posts:all`);
         let res;
 

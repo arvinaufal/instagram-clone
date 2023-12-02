@@ -1,22 +1,24 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Ionicons, FontAwesome, MaterialIcons, Feather, AntDesign } from '@expo/vector-icons';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-const Post = ({ navigation }) => {
+const Post = ({ navigation, post }) => {
+    const formattedLikes = post.likes ? post.likes.length.toLocaleString('us') : "0";
+    
     return (
         <View className="flex bg-white pb-2">
             <View className="flex flex-row w-full">
                 <View className="w-5/6 mx-3 my-2 flex-row">
                     <View className="w-8 h-8 rounded-full overflow-hidden">
                         <Image
-                            source={require('../../assets/images/dummy_img1.jpg')}
+                            source={{ uri: `https://cdn-icons-png.flaticon.com/512/149/149071.png` }}
                             style={{ width: '100%', height: '100%' }}
                         />
                     </View>
                     <View className="flex justify-center px-2">
-                        <Text className="font-semibold">arvinaufal</Text>
+                        <Text className="font-semibold">{post.author[0].username}</Text>
                     </View>
                 </View>
                 <View className="w-1/6 flex justify-center">
@@ -25,7 +27,7 @@ const Post = ({ navigation }) => {
             </View>
             <View className="flex w-full">
                 <Image
-                    source={{ uri: 'https://asset.kompas.com/crops/OJwfY1vMekpD6AThHdAW7GDOl4k=/0x218:1080x938/750x500/data/photo/2023/05/09/6459ad0feb9dd.jpg' }}
+                    source={{ uri: `${post.imgUrl}` }}
                     style={{ width: '100%', height: undefined, aspectRatio: 1 }}
                 />
             </View>
@@ -52,21 +54,21 @@ const Post = ({ navigation }) => {
                 </View>
             </View>
             <View className="mx-4">
-                <Text className="font-semibold">7,281,832 likes</Text>
+                <Text className="font-semibold">{formattedLikes} likes</Text>
             </View>
             <View style={{ maxWidth: '100%' }} className="mx-4 flex-1">
                 <Text style={{ lineHeight: 20, fontSize: 14 }}>
-                    <Text style={{ fontWeight: 'bold' }}>arvinaufal </Text>
+                    <Text style={{ fontWeight: 'bold' }}>{post.author[0].username} </Text>
                     <Text>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras tempor blandit diam, eu mollis ligula varius quis.
-                        Etiam arcu justo, finibus sit amet convallis quis, lacinia in risus. Aenean non mollis mauris.
-                        Vivamus vehicula nisi at condimentum tempor. Vivamus vel lacinia nisl. Aliquam congue elit sed enim tristique blandit.
-                        Donec molestie pulvinar tortor id rhoncus.
+                       {post.content} 
                     </Text>
                 </Text>
+                    <Text>
+                        #{post.tags}
+                    </Text>
             </View>
             <View className="mx-4 my-1 flex-1">
-                <Text className="opacity-40">View all 378,981 comments</Text>
+                <Text className="opacity-40">View all { post.comments ? post.comments.length : "0"} comments</Text>
             </View>
             <View className="mx-4 flex-1">
                 <Text className="opacity-40 text-xs">1 day ago</Text>

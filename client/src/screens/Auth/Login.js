@@ -1,17 +1,54 @@
-import { useState } from 'react';
-import { Image, Text, View } from 'react-native';
+import { useContext, useState } from 'react';
+import { Image, Text, View, ActivityIndicator } from 'react-native';
 import CButton from '../../components/Elements/Button';
 import FormAuth from '../../components/Layouts/FormAuth';
+import { LoginContext } from '../../context/LoginContext';
+import { gql, useMutation } from '@apollo/client';
+import { isArray } from '@apollo/client/utilities';
+
+const LOGIN = gql`
+  mutation Login($username: String, $password: String) {
+  login(username: $username, password: $password) {
+    accessToken
+  }
+}
+`;
+
 
 export default function Login({ navigation }) {
+    const { loginAction } = useContext(LoginContext);
+    const [form, setForm] = useState({
+        username: '',
+        password: ''
+    });
     const [isTyping, setIsTyping] = useState(false);
     const [isPasswordShown, setIsPasswordShown] = useState(true);
+    const [login, { data, error, loading }] = useMutation(LOGIN);
+
     const changeIsTyping = (value) => {
         setIsTyping(value);
     }
     const changeIsPasswordShown = (value) => {
         setIsPasswordShown(value);
     }
+
+    const postLogin = async () => {
+        try {
+            if(loading) return;
+            await login({ variables: form });
+            console.log(data);
+            if (error) {
+                throw error;
+            }
+          
+            loginAction('token', data.login.accessToken);
+        } catch (err) {
+            console.log(err);
+        }
+    
+    }
+
+    // console.log({ data, error, loading });
 
     return (
         <View className="flex bg-white min-h-screen justify-center items-center">
@@ -26,10 +63,14 @@ export default function Login({ navigation }) {
                     </View>
                 </View>
                 <View className="bg-white py-4 w-full flex flex-col">
-                    <FormAuth changeIsTyping={changeIsTyping} type={'Login'} changeIsPasswordShown={changeIsPasswordShown} isPasswordShown={isPasswordShown} />
+                    <FormAuth setForm={setForm} form={form} changeIsTyping={changeIsTyping} type={'Login'} changeIsPasswordShown={changeIsPasswordShown} isPasswordShown={isPasswordShown} />
                 </View>
                 <View className="bg-white w-full">
-                    <CButton type={'login'} navigation={navigation} />
+                    {
+                        loading ? <ActivityIndicator /> : <CButton type={'login'} navigation={navigation} postLogin={postLogin} />
+
+                    }
+
                     <View className="my-4 flex-row justify-center items-center">
                         <View className='flex-1 h-px bg-gray-300 mr-6 ml-4' />
                         <Text className="font-semibold opacity-40">OR</Text>

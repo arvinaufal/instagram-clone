@@ -13,53 +13,65 @@ const Stack = createNativeStackNavigator();
 
 export default function MainStack() {
     const { isLoggedIn, setIsLoggedIn } = useContext(LoginContext);
+
     return (
         <NavigationContainer>
             <Stack.Navigator>
-                <Stack.Screen
-                    name="Login"
-                    options={{
-                        headerShown: false,
-                    }}
-                    component={Login}
-                />
-                <Stack.Screen
-                    name="Register"
-                    options={{
-                        headerShown: false,
-                    }}
-                    component={Register}
-                />
-                <Stack.Screen
-                    name="Home"
-                    options={{
-                        headerShown: false,
-                    }}
-                    component={Home}
-                />
-                <Stack.Screen
-                    name="PostDetail"
-                    options={{
-                        headerShown: false,
-                    }}
-                    component={PostDetail}
-                />
-                <Stack.Screen
-                    name="SearchPage"
-                    options={{
-                        headerShown: false,
-       
-                    }}
-                    component={SearchPage}
-                />
-                <Stack.Screen
-                    name="ProfilePage"
-                    options={{
-                        headerShown: false,
-       
-                    }}
-                    component={ProfilePage}
-                />
+                {
+                    isLoggedIn ? (
+                        <>
+                            <Stack.Screen
+                                name="Home"
+                                options={{
+                                    headerShown: false,
+                                }}
+                                component={Home}
+                            />
+                            <Stack.Screen
+                                name="PostDetail"
+                                options={{
+                                    headerShown: false,
+                                }}
+                                component={PostDetail}
+                            />
+                            <Stack.Screen
+                                name="SearchPage"
+                                options={{
+                                    headerShown: false,
+
+                                }}
+                                component={SearchPage}
+                            />
+                            <Stack.Screen
+                                name="ProfilePage"
+                                options={{
+                                    headerShown: false,
+
+                                }}
+                                component={ProfilePage}
+                            />
+                        </>
+                    )
+                        :
+                        (
+                            <>
+                                <Stack.Screen
+                                    name="Login"
+                                    options={{
+                                        headerShown: false,
+                                    }}
+                                    component={Login}
+                                />
+                                <Stack.Screen
+                                    name="Register"
+                                    options={{
+                                        headerShown: false,
+                                    }}
+                                    component={Register}
+                                />
+                            </>
+                        )
+                }
             </Stack.Navigator>
         </NavigationContainer>
     );
