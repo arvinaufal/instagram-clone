@@ -29,7 +29,7 @@ export default function Register({ navigation }) {
                     <FormAuth changeIsTyping={changeIsTyping} type={'register'} changeIsPasswordShown={changeIsPasswordShown} isPasswordShown={isPasswordShown} />
                 </View>
                 <View className="bg-white w-full">
-                    <CButton type={'register'} />
+                    <CButton type={'register'} navigation={navigation}/>
                     <View className="my-4 flex-row justify-center items-center">
                         <View className='flex-1 h-px bg-gray-300 mr-6 ml-4' />
                         <Text className="font-semibold opacity-40">OR</Text>
