@@ -6,6 +6,7 @@ import { useContext } from "react";
 import { LoginContext } from "../context/LoginContext";
 import Home from "../screens/Home/Home";
 import PostDetail from "../screens/Home/PostDetail";
+import SearchPage from "../screens/Home/SearchPage";
 
 const Stack = createNativeStackNavigator();
 
@@ -39,9 +40,24 @@ export default function MainStack() {
                     name="PostDetail"
                     options={{
                         headerShown: false,
-                        title: 'Detail'
                     }}
                     component={PostDetail}
+                />
+                <Stack.Screen
+                    name="SearchPage"
+                    options={{
+                        headerShown: false,
+       
+                    }}
+                    component={SearchPage}
+                />
+                <Stack.Screen
+                    name="P"
+                    options={{
+                        headerShown: false,
+       
+                    }}
+                    component={SearchPage}
                 />
             </Stack.Navigator>
         </NavigationContainer>

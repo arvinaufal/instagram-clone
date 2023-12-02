@@ -6,8 +6,10 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import Post from '../../components/Layouts/Post';
 import BottomSheet from 'react-native-simple-bottom-sheet';
 import CHeader from '../../components/Elements/Header';
+import CFooter from '../../components/Elements/Footer';
 
 export default function PostDetail({ navigation }) {
+    const page = 'PostDetail';
     const [isTyping, setIsTyping] = useState(false);
     const panelRef = useRef(null);
     const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
@@ -151,7 +153,7 @@ export default function PostDetail({ navigation }) {
                 </ScrollView>
 
             </View>
-            <View className={`bg-white border-t-slate-200 flex flex-row justify-around items-center ${isTyping ? 'mb-56' : ''}`} style={{ height: '10%', borderTopWidth: 1 }}>
+            <View className={`bg-white border-t-slate-200 flex flex-row justify-around items-center ${isTyping ? 'mb-56' : ''}`} style={{ height: '8%', borderTopWidth: 1 }}>
                 <View className="w-5/6 mx-3 my-2 flex-row items-center ">
                     <View className="w-8 h-8 rounded-full overflow-hidden">
                         <Image
@@ -162,7 +164,7 @@ export default function PostDetail({ navigation }) {
                     <View className="flex justify-center px-2 w-4/5 ">
                         <TextInput
                             style={{ borderWidth: 0.4 }}
-                            className="mx-4 h-12 bg-slate-100 rounded-md px-4 py-1 border-slate-100 w-full"
+                            className="mx-4 h-10 bg-slate-100 rounded-md px-4 py-1 border-slate-100 w-full"
                             onChangeText={(text) => setFormComment({ ...formComment, content: text })}
                             value={formComment.content}
                             placeholder="Comments"
@@ -181,20 +183,7 @@ export default function PostDetail({ navigation }) {
                 </View>
             </View>
             <View className={`bg-white border-t-slate-200 flex flex-row justify-around items-center `} style={{ height: '8%', borderTopWidth: 1 }}>
-                <TouchableOpacity onPress={
-                    () => {
-                        navigation.navigate('Home')
-                    }
-                }>
-                    <Icon name="home" size={24} color="black" />
-                </TouchableOpacity>
-
-                <Icon name="magnify" size={24} color="gray" />
-
-                <Icon name="plus-box" size={24} color="gray" />
-
-                <Icon name="heart" size={24} color="gray" />
-                <Icon name="account-circle" size={24} color="gray" />
+                <CFooter navigation={navigation}/>
             </View>
             {/* </KeyboardAvoidingView> */}
 
