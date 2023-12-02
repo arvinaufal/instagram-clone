@@ -11,6 +11,11 @@ const typeDefs = `#graphql
     name: String
     username: String!
   }
+  type postsRef {
+    _id: ID,
+    content: String
+  }
+
   type User {
     _id: ID
     name: String
@@ -19,6 +24,7 @@ const typeDefs = `#graphql
     password: String!
     followers: [UserRef]
     followings: [UserRef]
+    posts: [postsRef]
   }
 
   type Follow {
@@ -54,7 +60,7 @@ const resolvers = {
       try {
         const { authorId } = await authentication();
         const user = await User.getById({ id: new ObjectId(authorId) });
-
+        
         return user;
       } catch (err) {
         throw err;

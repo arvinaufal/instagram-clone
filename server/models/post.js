@@ -4,8 +4,32 @@ const { getDB } = require("../config/mongo");
 class Post {
     static async getAll() {
         const Posts = getDB().collection("posts");
-        const posts = await Posts.find().toArray();
-
+        const posts = await Posts.aggregate([
+            {
+              $sort: { createdAt: -1 }
+            },
+            {
+              $lookup: {
+                from: "users",
+                let: { authorId: "$authorId" },
+                pipeline: [
+                  {
+                    $match: {
+                      $expr: { $eq: ["$_id", "$$authorId"] }
+                    }
+                  },
+                  {
+                    $project: {
+                      password: 0,
+                      email: 0
+                    }
+                  }
+                ],
+                as: "author"
+              }
+            }
+          ]).toArray();
+        
         return posts;
     }
 

@@ -66,6 +66,15 @@ class User {
                     as: "followings"
                   }
              },
+            {
+                $lookup:
+                  {
+                    from: "posts",
+                    localField: "_id",
+                    foreignField: "authorId",
+                    as: "posts"
+                  }
+             },
              {
                 $project : {
                     password: 0,

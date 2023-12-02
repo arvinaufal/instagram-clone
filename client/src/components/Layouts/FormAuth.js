@@ -1,13 +1,7 @@
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import { useState } from "react";
 import { Ionicons } from '@expo/vector-icons'
-export default function FormAuth({ changeIsTyping, changeIsPasswordShown, type, isPasswordShown }) {
-    const [form, setForm] = useState({
-        name: '',
-        username: '',
-        email: '',
-        password: ''
-    });
+export default function FormAuth({ changeIsTyping, changeIsPasswordShown, type, isPasswordShown, form, setForm }) {
 
     return (
         <>

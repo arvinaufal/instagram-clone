@@ -1,16 +1,50 @@
 import { useState } from 'react';
-import { Image, Text, View } from 'react-native';
+import { Image, Text, View, ActivityIndicator } from 'react-native';
 import CButton from '../../components/Elements/Button';
 import FormAuth from '../../components/Layouts/FormAuth';
+import { gql, useMutation } from '@apollo/client';
+
+const REGISTER = gql`
+mutation Mutation($name: String, $username: String, $email: String, $password: String) {
+  register(name: $name, username: $username, email: $email, password: $password) {
+    _id
+    name
+    username
+    email
+  }
+}
+`;
 
 export default function Register({ navigation }) {
     const [isTyping, setIsTyping] = useState(false);
+    const [form, setForm] = useState({
+        username: '',
+        password: '',
+        name: '',
+        email: ''
+    });
     const [isPasswordShown, setIsPasswordShown] = useState(true);
+    const [register, { data, error, loading }] = useMutation(REGISTER);
     const changeIsTyping = (value) => {
         setIsTyping(value);
     }
     const changeIsPasswordShown = (value) => {
         setIsPasswordShown(value);
+    }
+
+    const postRegister = async () => {
+        try {
+            if (loading) return;
+            await register({ variables: form });
+            if (error) {
+                throw error;
+            }
+            if (data.register) {
+                navigation.replace('Login')
+            }
+        } catch (err) {
+            console.log(err);
+        }
     }
 
     return (
@@ -26,10 +60,14 @@ export default function Register({ navigation }) {
                     </View>
                 </View>
                 <View className="bg-white py-4 w-full flex flex-col">
-                    <FormAuth changeIsTyping={changeIsTyping} type={'register'} changeIsPasswordShown={changeIsPasswordShown} isPasswordShown={isPasswordShown} />
+                    <FormAuth setForm={setForm} form={form} changeIsTyping={changeIsTyping} type={'register'} changeIsPasswordShown={changeIsPasswordShown} isPasswordShown={isPasswordShown} />
                 </View>
                 <View className="bg-white w-full">
-                    <CButton type={'register'} navigation={navigation}/>
+                    {
+                        loading ? <ActivityIndicator /> : <CButton type={'register'} navigation={navigation} postRegister={postRegister} />
+
+                    }
+
                     <View className="my-4 flex-row justify-center items-center">
                         <View className='flex-1 h-px bg-gray-300 mr-6 ml-4' />
                         <Text className="font-semibold opacity-40">OR</Text>

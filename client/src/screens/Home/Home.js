@@ -1,14 +1,74 @@
 import { useEffect, useRef, useState } from 'react';
-import { Image, KeyboardAvoidingView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Image, KeyboardAvoidingView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View, ActivityIndicator, Keyboard } from 'react-native';
 import { Ionicons, FontAwesome, MaterialIcons, Feather, AntDesign } from '@expo/vector-icons';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Post from '../../components/Layouts/Post';
 import BottomSheet from 'react-native-simple-bottom-sheet';
 import CHeader from '../../components/Elements/Header';
+import { gql, useQuery, useMutation } from '@apollo/client';
+
+const GET_POST = gql`
+ query Posts {
+  posts {
+    _id
+    comments {
+      content
+      authorId
+      createdAt
+      updatedAt
+    }
+    authorId
+    content
+    createdAt
+    imgUrl
+    likes {
+      authorId
+      createdAt
+      updatedAt
+    }
+    tags
+    updatedAt
+    author {
+      _id
+      name
+      username
+    }
+  }
+}
+`;
+
+const ADD_POST = gql`
+mutation AddPost($tags: [String], $imgUrl: String, $content: String) {
+  addPost(tags: $tags, imgUrl: $imgUrl, content: $content) {
+    _id
+    authorId
+    comments {
+      content
+      authorId
+      createdAt
+      updatedAt
+    }
+    content
+    createdAt
+    imgUrl
+    likes {
+      authorId
+      createdAt
+      updatedAt
+    }
+    tags
+    updatedAt
+  }
+}
+`;
+
 
 export default function Home({ navigation }) {
+    const { loading, error, data } = useQuery(GET_POST);
+    const [addPosting, { data: addPostData, error: addPostError, loading: addPostLoading }] = useMutation(ADD_POST, { refetchQueries: [GET_POST] });
     const page = 'Home';
+    const [posts, setPosts] = useState('');
     const [isTyping, setIsTyping] = useState(false);
     const [formPost, setFormPost] = useState({
         content: '',
@@ -19,19 +79,31 @@ export default function Home({ navigation }) {
     const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
 
     useEffect(() => {
-        if (panelRef.current) {
-            //    panelRef.current.togglePanel()
-
+        // console.log(loading, error, data)
+        if (data) {
+            setPosts(data.posts);
         }
-    }, []);
-
-    let Posts = [];
-    for (let index = 0; index < 4; index++) {
-        Posts.push(Post);
-    }
+    }, [data]);
 
     const handleAddPost = async () => {
-        console.log({ formPost });
+        console.log(addPostLoading)
+        if (addPostLoading) return;
+        await addPosting({ variables: formPost });
+
+        if (error) {
+            throw error;
+        }
+
+        if (data) {
+            setFormPost({
+                content: '',
+                tags: '',
+                imgUrl: ''
+            });
+            Keyboard.dismiss();
+            setIsBottomSheetOpen(!isBottomSheetOpen);
+        }
+
     }
 
     return (
@@ -46,9 +118,12 @@ export default function Home({ navigation }) {
                 <View className="flex-1 w-full" style={{ flex: 1 }}>
                     <ScrollView>
                         {
-                            Posts.map((el, index) => (
-                                <Post key={index} navigation={navigation} />
-                            ))
+                            posts !== '' ?
+                                posts.map((el, index) => (
+                                    <Post key={el._id} navigation={navigation} post={el} />
+                                ))
+                                :
+                                <ActivityIndicator />
                         }
                     </ScrollView>
                 </View>
@@ -96,7 +171,14 @@ export default function Home({ navigation }) {
                                     className="h-10 bg-sky-400 flex justify-center items-center rounded-md"
                                     onPress={() => handleAddPost()}
                                 >
-                                    <Text className="text-white font-bold" >Tambah Postingan</Text>
+
+                                    {
+                                        addPostLoading ?
+                                            <ActivityIndicator />
+                                            :
+                                            <Text className="text-white font-bold" >Tambah Postingan</Text>
+                                    }
+
                                 </TouchableOpacity>
                             </View>
                         </View>
