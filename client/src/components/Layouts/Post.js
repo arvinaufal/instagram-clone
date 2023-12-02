@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Ionicons, FontAwesome, MaterialIcons, Feather, AntDesign } from '@expo/vector-icons';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-const Post = () => {
+const Post = ({ navigation }) => {
     return (
         <View className="flex bg-white pb-2">
             <View className="flex flex-row w-full">
@@ -34,7 +34,12 @@ const Post = () => {
                     <View className="flex flex-row gap-x-4">
                         <AntDesign name="heart" size={24} color="red" />
 
-                        <Ionicons name="chatbubble-outline" size={24} color="black" />
+                        <TouchableOpacity
+                            className="flex justify-center items-center rounded-md"
+                            onPress={() => navigation.navigate('PostDetail')}
+                        >
+                            <Ionicons name="chatbubble-outline" size={24} color="black" />
+                        </TouchableOpacity>
 
                         <Ionicons name="paper-plane-outline" size={24} color="black" />
                     </View>
