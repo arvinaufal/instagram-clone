@@ -5,12 +5,12 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Post from '../../components/Layouts/Post';
 import BottomSheet from 'react-native-simple-bottom-sheet';
-import CHeader from '../../components/Elements/Header';
 import CFooter from '../../components/Elements/Footer';
+import CProfileHeader from '../../components/Elements/ProfileHeader';
 
-export default function Profile({ navigation }) {
-    const page = 'Profile';
-   
+export default function ProfilePage({ navigation }) {
+    const page = 'ProfilePage';
+
     const panelRef = useRef(null);
     const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
     const [formSearch, setFormSearch] = useState({
@@ -30,7 +30,7 @@ export default function Profile({ navigation }) {
 
     useEffect(() => {
         if (formSearch.q !== '') {
-            console.log({formSearch});
+            console.log({ formSearch });
         }
     }, [formSearch]);
 
@@ -42,72 +42,58 @@ export default function Profile({ navigation }) {
                 style={{ flex: 1 }}
             > */}
 
-            <CHeader />
+            <CProfileHeader />
 
-            <View className="flex-1 w-full my-2" style={{ flex: 1 }}>
-                <View className="flex h-12 mx-2 mr-8">
-                    <View className="flex w-full flex-row h-10 mx-2 bg-slate-200 items-center rounded-xl">
-
-                        <View className="pl-2 py-2 pr-0">
-                            <Ionicons name="search" size={18} color="gray" />
-                        </View>
-                        <View className="flex justify-center px-2 w-5/6 ">
-                            <TextInput
-                                style={{ borderWidth: 0.4 }}
-                                className=" h-full bg-slate-200 rounded-md px-4 py-1 border-slate-100"
-                                onChangeText={(text) => {
-                                    setFormSearch({ ...formSearch, q: text })
-                                }}
-                                value={formSearch.q}
-                                placeholder="Search ..."
-                             
+            <View className="flex-1 w-full my-2 " style={{ flex: 1 }}>
+                <View className="flex flex-row w-full">
+                    <View className="mx-3 my-2 flex-row ">
+                        <View className="w-20 h-20 rounded-full overflow-hidden">
+                            <Image
+                                source={require('../../assets/images/dummy_img1.jpg')}
+                                style={{ width: '100%', height: '100%' }}
                             />
                         </View>
+                    </View>
+                    <View className="flex justify-center items-center w-3/5 ml-4 ">
 
+                        <View className="flex flex-row gap-8" style={{ minWidth: '70%' }}>
+                            <View className="flex items-center">
+                                <Text className="text-xl font-bold">
+                                    0
+                                </Text>
+                                <Text className="font-semibold">
+                                    Posts
+                                </Text>
+                            </View>
+                            <View className="flex items-center">
+                                <Text className="text-xl font-bold">
+                                    0
+                                </Text>
+                                <Text className="font-semibold">
+                               
+                                    Followers
+                                </Text>
+                            </View>
+                            <View className="flex items-center">
+                                <Text className="text-xl font-bold">
+                                    0
+                                </Text>
+                                <Text className="font-semibold">
+                                
+                                    Followings
+                                </Text>
+                            </View>
+
+                        </View>
                     </View>
                 </View>
-                <ScrollView>
+                <View className="mx-4 w-full mt-1">
+                    <Text className="font-semibold text-md">Arvi Naufal Agustian</Text>
+                </View>
+                <View className="mx-4 w-full">
+                    <Text className="text-md">Welcome! this is your profile</Text>
+                </View>
 
-                    <View className="flex bg-white pb-2 w-full">
-                        <View className="flex flex-row w-full mr-4 justify-between">
-                            <View className="w-3/6 mx-3 my-2 flex-row">
-                                <View className="w-8 h-8 rounded-full overflow-hidden">
-                                    <Image
-                                        source={require('../../assets/images/dummy_img1.jpg')}
-                                        style={{ width: '100%', height: '100%' }}
-                                    />
-                                </View>
-                                <View className="flex justify-center px-2">
-                                    <Text className="font-semibold">arvinaufal</Text>
-                                </View>
-                            </View>
-                            <View className="w-24 mx-2 flex justify-center">
-                                <View className="mr-8 bg-sky-600 rounded-md h-6 flex  w-20  items-center justify-center">
-                                    <Text className="text-center text-white">Follow</Text>
-                                </View>
-                            </View>
-                        </View>
-                        <View className="flex flex-row w-full mr-4 justify-between">
-                            <View className="w-3/6 mx-3 my-2 flex-row">
-                                <View className="w-8 h-8 rounded-full overflow-hidden">
-                                    <Image
-                                        source={require('../../assets/images/dummy_img1.jpg')}
-                                        style={{ width: '100%', height: '100%' }}
-                                    />
-                                </View>
-                                <View className="flex justify-center px-2">
-                                    <Text className="font-semibold">arvinaufal</Text>
-                                </View>
-                            </View>
-                            <View className="w-24 mx-2 flex justify-center">
-                                <View className="mr-8 bg-slate-200 rounded-md h-6 flex  w-20  items-center justify-center">
-                                    <Text className="text-center text-black">Following</Text>
-                                </View>
-                            </View>
-                        </View>
-                    </View>
-
-                </ScrollView>
 
             </View>
 
@@ -115,8 +101,6 @@ export default function Profile({ navigation }) {
                 <CFooter navigation={navigation} />
             </View>
             {/* </KeyboardAvoidingView> */}
-
-
         </View>
     )
 }

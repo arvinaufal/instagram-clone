@@ -7,6 +7,7 @@ import { LoginContext } from "../context/LoginContext";
 import Home from "../screens/Home/Home";
 import PostDetail from "../screens/Home/PostDetail";
 import SearchPage from "../screens/Home/SearchPage";
+import ProfilePage from "../screens/Home/ProfilePage";
 
 const Stack = createNativeStackNavigator();
 
@@ -52,12 +53,12 @@ export default function MainStack() {
                     component={SearchPage}
                 />
                 <Stack.Screen
-                    name="P"
+                    name="ProfilePage"
                     options={{
                         headerShown: false,
        
                     }}
-                    component={SearchPage}
+                    component={ProfilePage}
                 />
             </Stack.Navigator>
         </NavigationContainer>

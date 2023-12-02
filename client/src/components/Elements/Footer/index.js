@@ -42,7 +42,14 @@ const CFooter = ({ classname, children, type, navigation, page }) => {
                 } */}
             <Icon name="plus-box" size={24} color="gray" />
             <Icon name="heart" size={24} color="gray" />
-            <Icon name="account-circle" size={24} color="gray" />
+            <TouchableOpacity onPress={
+                () => {
+                    navigation.navigate('ProfilePage')
+                }
+            }>
+
+                <Icon name="account-circle" size={24} color="gray" />
+            </TouchableOpacity>
         </>
     );
 }
