@@ -5,6 +5,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Post from '../../components/Layouts/Post';
 import BottomSheet from 'react-native-simple-bottom-sheet';
+import CHeader from '../../components/Elements/Header';
 
 export default function Home({ navigation }) {
     const [isTyping, setIsTyping] = useState(false);
@@ -39,34 +40,15 @@ export default function Home({ navigation }) {
                 behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
                 style={{ flex: 1 }}
             >
-                <View className="bg-white flex flex-row mx-4 justify-between border-b-gray-600" style={{ height: '10%' }}>
-                    <View className="flex items-end flex-row h-full pb-1">
-                        <Image
-                            source={
-                                require('../../assets/images/ig_logo100.png')
-                            }
-                        />
-                    </View>
+                <CHeader />
 
-                    <View className="flex items-end flex-row pb-2 gap-6 pr-2">
-                        <Ionicons name="heart-outline" size={28} color="black" />
-                        <View className="pb-1">
-
-                            <FontAwesome name="paper-plane-o" size={24} color="black" />
-                        </View>
-                    </View>
-                </View>
                 <View className="flex-1 w-full" style={{ flex: 1 }}>
                     <ScrollView>
                         {
                             Posts.map((el, index) => (
-                                <Post key={index} />
+                                <Post key={index} navigation={navigation} />
                             ))
                         }
-
-
-
-
                     </ScrollView>
 
                 </View>

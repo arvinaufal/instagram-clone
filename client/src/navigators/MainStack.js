@@ -5,6 +5,7 @@ import Register from "../screens/Auth/Register";
 import { useContext } from "react";
 import { LoginContext } from "../context/LoginContext";
 import Home from "../screens/Home/Home";
+import PostDetail from "../screens/Home/PostDetail";
 
 const Stack = createNativeStackNavigator();
 
@@ -33,6 +34,14 @@ export default function MainStack() {
                         headerShown: false,
                     }}
                     component={Home}
+                />
+                <Stack.Screen
+                    name="PostDetail"
+                    options={{
+                        headerShown: false,
+                        title: 'Detail'
+                    }}
+                    component={PostDetail}
                 />
             </Stack.Navigator>
         </NavigationContainer>
