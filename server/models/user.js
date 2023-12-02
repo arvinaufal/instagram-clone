@@ -26,9 +26,63 @@ class User {
 
     static async getById({ id }) {
         const Users = getDB().collection("users");
-        const user = await Users.findOne({ _id: id });
+        const user = await Users.aggregate([
+            {
+                $match: { _id: id }
+            },
+            {
+                $lookup:
+                  {
+                    from: "follows",
+                    localField: "_id",
+                    foreignField: "followerId",
+                    as: "followers"
+                  }
+             },
+            {
+                $lookup:
+                  {
+                    from: "follows",
+                    localField: "_id",
+                    foreignField: "followingId",
+                    as: "followings"
+                  }
+             },
+            {
+                $lookup:
+                  {
+                    from: "users",
+                    localField: "followers.followingId",
+                    foreignField: "_id",
+                    as: "followers"
+                  }
+             },
+            {
+                $lookup:
+                  {
+                    from: "users",
+                    localField: "followings.followerId",
+                    foreignField: "_id",
+                    as: "followings"
+                  }
+             },
+            {
+                $lookup:
+                  {
+                    from: "posts",
+                    localField: "_id",
+                    foreignField: "authorId",
+                    as: "posts"
+                  }
+             },
+             {
+                $project : {
+                    password: 0,
+                }
+             }
+        ]).toArray();
 
-        return user;
+        return user[0];
     }
 
     static async getByQ({ q }) {
@@ -69,7 +123,7 @@ class User {
         const post = await Post.findOne({ _id: postId });
         if (!post.likes) return false;
         if (post.likes.length < 1) return false;
-        const liked = post.likes.find(({ authorId }) => authorId);
+        const liked = post.likes.find((el) => el.authorId.toString() === authorId.toString());   
         if (!liked) return false;
 
         return liked;

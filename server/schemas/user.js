@@ -6,12 +6,25 @@ const User = require("../models/user");
 const { GraphQLError } = require("graphql");
 
 const typeDefs = `#graphql
+  type UserRef {
+    _id: ID
+    name: String
+    username: String!
+  }
+  type postsRef {
+    _id: ID,
+    content: String
+  }
+
   type User {
     _id: ID
     name: String
     username: String!
     email: String!
     password: String!
+    followers: [UserRef]
+    followings: [UserRef]
+    posts: [postsRef]
   }
 
   type Follow {
@@ -29,7 +42,7 @@ const typeDefs = `#graphql
   }
 
   type Query {
-    user(userId: String!): User
+    user: User
     searchUser(q: String!): [User]
   }
   
@@ -43,11 +56,11 @@ const typeDefs = `#graphql
 
 const resolvers = {
   Query: {
-    user: async (_, { userId }, { authentication }) => {
+    user: async (_, __, { authentication }) => {
       try {
-        await authentication();
-        const user = await User.getById({ id: new ObjectId(userId) });
-
+        const { authorId } = await authentication();
+        const user = await User.getById({ id: new ObjectId(authorId) });
+        
         return user;
       } catch (err) {
         throw err;
@@ -168,7 +181,6 @@ const resolvers = {
 
         if (!liked) {
           const like = await User.like(data);
-
           return like;
         }
 
