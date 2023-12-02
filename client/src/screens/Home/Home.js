@@ -8,6 +8,7 @@ import BottomSheet from 'react-native-simple-bottom-sheet';
 import CHeader from '../../components/Elements/Header';
 
 export default function Home({ navigation }) {
+    const page = 'Home';
     const [isTyping, setIsTyping] = useState(false);
     const [formPost, setFormPost] = useState({
         content: '',
@@ -50,7 +51,6 @@ export default function Home({ navigation }) {
                             ))
                         }
                     </ScrollView>
-
                 </View>
 
                 {/* <View className={`${isBottomSheetOpen === false ? 'hidden' : ''}`}> */}
@@ -58,7 +58,6 @@ export default function Home({ navigation }) {
                 <BottomSheet ref={ref => panelRef.current = ref}>
                     <View className={` ${isTyping ? 'mb-2' : 'mb-16'} ${isBottomSheetOpen ? 'flex' : 'hidden'}`}>
                         <View className="my-2">
-
                             <TextInput
                                 style={{ borderWidth: 0.4 }}
                                 className="mx-2 h-10 bg-slate-100 rounded-md px-4 py-1 border-slate-300"
@@ -108,8 +107,21 @@ export default function Home({ navigation }) {
                 {/* </View> */}
 
                 <View className={`bg-white border-t-slate-200 flex flex-row justify-around items-center ${isTyping ? 'hidden' : ''}`} style={{ height: '8%', borderTopWidth: 1 }}>
-                    <Icon name="home" size={24} color="black" />
-                    <Icon name="magnify" size={24} color="gray" />
+                    <TouchableOpacity onPress={
+                        () => {
+                            navigation.navigate('Home')
+                        }
+                    }>
+                        <Icon name="home" size={24} color="black" />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={
+                        () => {
+                            navigation.navigate('SearchPage')
+                        }
+                    }>
+                        <Icon name="magnify" size={24} color="gray" />
+                    </TouchableOpacity>
+
                     <TouchableOpacity onPress={
                         () => {
                             panelRef.current.togglePanel()
