@@ -7,7 +7,7 @@ import Post from '../../components/Layouts/Post';
 import BottomSheet from 'react-native-simple-bottom-sheet';
 import CFooter from '../../components/Elements/Footer';
 import CProfileHeader from '../../components/Elements/ProfileHeader';
-import { gql, useQuery } from '@apollo/client';
+import { gql, useQuery, useLazyQuery } from '@apollo/client';
 
 const GET_PROFILE = gql`
 query User {
@@ -36,7 +36,9 @@ query User {
 
 export default function ProfilePage({ navigation }) {
     const page = 'ProfilePage';
-    const { loading, error, data } = useQuery(GET_PROFILE);
+    const [fetchProfile, { loading, error, data }] = useLazyQuery(GET_PROFILE, {
+        fetchPolicy: 'network-only',
+    });
     const [profile, setProfile] = useState('');
     const panelRef = useRef(null);
     const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
@@ -45,24 +47,18 @@ export default function ProfilePage({ navigation }) {
     });
 
     useEffect(() => {
+        fetchProfile();
+      }, [navigation]);
+
+    useEffect(() => {
         if (data) {
             setProfile(data.user);
         }
     }, [data]);
 
-    useEffect(() => {
-        if (formSearch.q !== '') {
-            console.log({ formSearch });
-        }
-    }, [formSearch]);
-
     return (
 
         <View className="flex bg-white min-h-screen ">
-            {/* <KeyboardAvoidingView
-                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-                style={{ flex: 1 }}
-            > */}
 
             {
                 profile !== '' && <CProfileHeader profile={profile} />
@@ -70,7 +66,7 @@ export default function ProfilePage({ navigation }) {
 
             {
                 profile !== '' ?
-                   ( <View className="flex-1 w-full my-2 " style={{ flex: 1 }}>
+                    (<View className="flex-1 w-full my-2 " style={{ flex: 1 }}>
                         <View className="flex flex-row w-full">
                             <View className="mx-3 my-2 flex-row ">
                                 <View className="w-20 h-20 rounded-full overflow-hidden">
@@ -130,7 +126,6 @@ export default function ProfilePage({ navigation }) {
             <View className={`bg-white border-t-slate-200 flex flex-row justify-around items-center `} style={{ height: '8%', borderTopWidth: 1 }}>
                 <CFooter navigation={navigation} />
             </View>
-            {/* </KeyboardAvoidingView> */}
         </View>
     )
 }

@@ -25,6 +25,7 @@ const typeDefs = `#graphql
     followers: [UserRef]
     followings: [UserRef]
     posts: [postsRef]
+    isFollowed: String
   }
 
   type Follow {
@@ -60,7 +61,7 @@ const resolvers = {
       try {
         const { authorId } = await authentication();
         const user = await User.getById({ id: new ObjectId(authorId) });
-        
+
         return user;
       } catch (err) {
         throw err;
@@ -68,10 +69,16 @@ const resolvers = {
     },
     searchUser: async (_, { q }, { authentication }) => {
       try {
-        await authentication();
+        const { authorId } = await authentication();
         const users = await User.getByQ({ q });
+        const user = await User.getById({ id: new ObjectId(authorId) });
 
-        return users;
+        const filteredUsers = users.map(filteredUser => {
+          const isFollowed = user.followings.some(following => following._id.toString() === filteredUser._id.toString());
+          return { ...filteredUser, isFollowed: isFollowed.toString() };
+        });
+
+        return filteredUsers;
       } catch (err) {
         throw err;
       }
@@ -157,6 +164,7 @@ const resolvers = {
     follow: async (_, { followingId }, { authentication }) => {
       try {
         const { authorId } = await authentication();
+
         const data = { followingId: new ObjectId(followingId), followerId: new ObjectId(authorId) };
         const followed = await User.getFollowing(data);
 
@@ -176,6 +184,7 @@ const resolvers = {
     like: async (_, { postId }, { authentication }) => {
       try {
         const { authorId } = await authentication();
+
         const data = { authorId: new ObjectId(authorId), postId: new ObjectId(postId) };
         const liked = await User.getLiked(data);
 

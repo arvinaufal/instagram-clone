@@ -36,7 +36,6 @@ export default function Login({ navigation }) {
         try {
             if(loading) return;
             await login({ variables: form });
-            console.log(data);
             if (error) {
                 throw error;
             }
@@ -47,8 +46,6 @@ export default function Login({ navigation }) {
         }
     
     }
-
-    // console.log({ data, error, loading });
 
     return (
         <View className="flex bg-white min-h-screen justify-center items-center">
@@ -78,7 +75,7 @@ export default function Login({ navigation }) {
                     </View>
                     <View className="mx-4 flex-row justify-center items-center">
                         <Text className="text-md">Don't Have an account? </Text>
-                        <Text className="text-md font-bold text-sky-600" onPress={() => navigation.navigate('Register')}>Register</Text>
+                        <Text className="text-md font-bold text-sky-600" onPress={() => navigation.replace('Register')}>Register</Text>
                     </View>
 
                 </View>

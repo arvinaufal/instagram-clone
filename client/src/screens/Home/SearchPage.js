@@ -7,7 +7,7 @@ import Post from '../../components/Layouts/Post';
 import BottomSheet from 'react-native-simple-bottom-sheet';
 import CHeader from '../../components/Elements/Header';
 import CFooter from '../../components/Elements/Footer';
-import { gql, useQuery, useLazyQuery } from '@apollo/client';
+import { gql, useQuery, useLazyQuery, useMutation } from '@apollo/client';
 
 const SEARCH_USER = gql`
 query SearchUser($q: String!) {
@@ -15,6 +15,17 @@ query SearchUser($q: String!) {
     _id
     name
     username
+    isFollowed
+  }
+}
+`;
+
+const FOLLOW = gql`
+mutation Follow($followingId: String) {
+  follow(followingId: $followingId) {
+    _id
+    followerId
+    followingId
   }
 }
 `;
@@ -23,6 +34,7 @@ query SearchUser($q: String!) {
 export default function SearchPage({ navigation }) {
     const page = 'SearchPage';
     const [getSearch, { loading, error, data }] = useLazyQuery(SEARCH_USER);
+    const [follow, { data: dataFollow, error: errorFollow, loading: loadingFollow }] = useMutation(FOLLOW);
     const [accounts, setAccounts] = useState([]);
     const panelRef = useRef(null);
     const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
@@ -38,11 +50,25 @@ export default function SearchPage({ navigation }) {
         if (data) {
             setAccounts(data.searchUser);
         }
+
         if (formSearch.q === '') {
             setAccounts([]);
         }
     }, [formSearch.q, getSearch]);
 
+    const handleFollow = async (accountId) => {
+        try {
+            if (loadingFollow) return;
+            await follow({ variables: { followingId: accountId } });
+
+            if (error) {
+                throw error;
+            }
+            navigation.replace('ProfilePage')
+        } catch (err) {
+            console.log(err);
+        }
+    }
     return (
         <View className="flex bg-white min-h-screen ">
             <CHeader />
@@ -91,9 +117,28 @@ export default function SearchPage({ navigation }) {
                                             </View>
                                         </View>
                                         <View className="w-24 mx-2 flex justify-center">
-                                            <View className="mr-8 bg-slate-200 rounded-md h-6 flex  w-20  items-center justify-center">
-                                                <Text className="text-center text-black">Following</Text>
-                                            </View>
+                                            <TouchableOpacity onPress={() => {
+                                                handleFollow(account._id);
+                                            }}>
+
+
+                                                {
+                                                    account.isFollowed === "true"
+                                                        ?
+                                                        <View className="mr-8 bg-slate-300 rounded-md h-6 flex  w-20  items-center justify-center">
+
+                                                            <Text className="text-center text-black">Followed</Text>
+
+                                                        </View>
+                                                        :
+                                                        <View className="mr-8 bg-sky-600 rounded-md h-6 flex  w-20  items-center justify-center">
+
+
+                                                            <Text className="text-center text-white">Follow</Text>
+                                                        </View>
+                                                }
+
+                                            </TouchableOpacity>
                                         </View>
                                     </View>
                                 ))
