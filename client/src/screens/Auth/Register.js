@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Image, Text, View, ActivityIndicator } from 'react-native';
+import { Image, Text, View, ActivityIndicator, Alert } from 'react-native';
 import CButton from '../../components/Elements/Button';
 import FormAuth from '../../components/Layouts/FormAuth';
 import { gql, useMutation } from '@apollo/client';
@@ -39,9 +39,15 @@ export default function Register({ navigation }) {
             if (error) {
                 throw error;
             }
-            if (data.register) {
-                navigation.replace('Login')
-            }
+            Alert.alert("Registered", "You have Successfully Registered", [
+                {
+                    text: "OK",
+                    style: "default",
+                },
+            ]);
+
+            navigation.replace('Login')
+
         } catch (err) {
             console.log(err);
         }

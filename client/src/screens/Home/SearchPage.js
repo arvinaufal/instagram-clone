@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Image, KeyboardAvoidingView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Alert, Image, KeyboardAvoidingView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { Ionicons, FontAwesome, MaterialIcons, Feather, AntDesign } from '@expo/vector-icons';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -64,6 +64,13 @@ export default function SearchPage({ navigation }) {
             if (error) {
                 throw error;
             }
+            Alert.alert("Registered", "You have Successfully Follow account", [
+                {
+                    text: "OK",
+                    style: "default",
+                },
+            ]);
+
             navigation.replace('ProfilePage')
         } catch (err) {
             console.log(err);
