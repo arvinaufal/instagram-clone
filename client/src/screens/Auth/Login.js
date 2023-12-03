@@ -1,5 +1,5 @@
 import { useContext, useState } from 'react';
-import { Image, Text, View, ActivityIndicator } from 'react-native';
+import { Image, Text, View, ActivityIndicator, Alert } from 'react-native';
 import CButton from '../../components/Elements/Button';
 import FormAuth from '../../components/Layouts/FormAuth';
 import { LoginContext } from '../../context/LoginContext';
@@ -35,7 +35,7 @@ export default function Login({ navigation }) {
     const postLogin = async () => {
         try {
             if(loading) return;
-            await login({ variables: form });
+            const { data } = await login({ variables: form });
             if (error) {
                 throw error;
             }

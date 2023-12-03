@@ -7,6 +7,28 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 const Post = ({ navigation, post }) => {
     const formattedLikes = post.likes ? post.likes.length.toLocaleString('us') : "0";
     const formattedTags = post.tags ? post.tags.map(element => `#${element}`).join(' ') : '';
+
+
+    const formatTime = (createdAt) => {
+        const now = new Date();
+        const createdDate = new Date(createdAt);
+
+        const timeDifference = Math.floor((now - createdDate) / 1000);
+        if (timeDifference < 60) {
+            return `${timeDifference} minutes ago`;
+        } else if (timeDifference < 3600) {
+            const minutesAgo = Math.floor(timeDifference / 60);
+            return `${minutesAgo} minutes ago`;
+        } else if (timeDifference < 86400) {
+            const hoursAgo = Math.floor(timeDifference / 3600);
+            return `${hoursAgo} hours ago`;
+        } else {
+            const daysAgo = Math.floor(timeDifference / 86400);
+            return `${daysAgo} days ago`;
+        }
+    }
+
+    const formattedDate = formatTime(post.createdAt)
     return (
         <View className="flex bg-white pb-2">
             <View className="flex flex-row w-full">
@@ -34,8 +56,17 @@ const Post = ({ navigation, post }) => {
             <View className="flex flex-row my-2 mx-4">
                 <View className="flex w-5/6">
                     <View className="flex flex-row gap-x-4">
+                        <TouchableOpacity
+                            className="flex justify-center items-center rounded-md"
 
-                        <AntDesign name="heart" size={24} color="red" />
+                            onPress={() => navigation.navigate('PostDetail', {
+                                postId: `${post._id}`
+                            })}
+                        >
+                            <AntDesign name="hearto" size={24} color="black" />
+                        </TouchableOpacity>
+
+
 
                         <TouchableOpacity
                             className="flex justify-center items-center rounded-md"
@@ -83,7 +114,7 @@ const Post = ({ navigation, post }) => {
 
             </View>
             <View className="mx-4 flex-1">
-                <Text className="opacity-40 text-xs">1 day ago</Text>
+                <Text className="opacity-40 text-xs">{formattedDate}</Text>
             </View>
         </View>
     )
