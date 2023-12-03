@@ -27,7 +27,21 @@ class Post {
                 ],
                 as: "author"
               }
-            }
+            },
+            {
+                $project: {
+                    "_id": 1,
+                    "content": 1,
+                    "tags": 1,
+                    "imgUrl": 1,
+                    "authorId": 1,
+                    "createdAt": 1,
+                    "updatedAt": 1,
+                    "author": { $arrayElemAt: ["$author", 0] },
+                    "likes" : 1,
+                    "comments" : 1
+                }
+            },
           ]).toArray();
         
         return posts;
@@ -105,12 +119,33 @@ class Post {
                 }
             },
             {
+                $lookup: {
+                    from: "users",
+                    let: { authorId: "$authorId" },
+                    pipeline: [
+                        {
+                            $match: {
+                                $expr: { $eq: ["$_id", "$$authorId"] }
+                            }
+                        },
+                        {
+                            $project: {
+                                password: 0,
+                                email: 0
+                            }
+                        }
+                    ],
+                    as: "author"
+                }
+            },
+            {
                 $group: {
                     _id: "$_id",
                     content: { $first: "$content" },
                     tags: { $first: "$tags" },
                     imgUrl: { $first: "$imgUrl" },
                     authorId: { $first: "$authorId" },
+                    author: { $first: "$author" },
                     createdAt: { $first: "$createdAt" },
                     updatedAt: { $first: "$updatedAt" },
                     likes: { $addToSet: "$likes" },
@@ -126,9 +161,12 @@ class Post {
                     "authorId": 1,
                     "createdAt": 1,
                     "updatedAt": 1,
+                    "author": { $arrayElemAt: ["$author", 0] },
                     "comments": {
                         $map: {
-                            input: "$comments",
+                            input: {
+                                $ifNull: ["$comments", []]
+                            },
                             as: "comment",
                             in: {
                                 content: "$$comment.content",
@@ -141,7 +179,9 @@ class Post {
                     },
                     "likes": {
                         $map: {
-                            input: "$likes",
+                             input: {
+                                $ifNull: ["$likes", []]
+                            },
                             as: "like",
                             in: {
                                 authorId: "$$like.authorId",
