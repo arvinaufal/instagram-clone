@@ -10,7 +10,7 @@ const CFooter = ({ classname, children, type, navigation, page }) => {
         <>
             <TouchableOpacity onPress={
                 () => {
-                    navigation.navigate('Home')
+                    navigation.replace('Home')
                 }
             }>
                 <Icon name="home" size={24} color="black" />
@@ -18,7 +18,7 @@ const CFooter = ({ classname, children, type, navigation, page }) => {
 
             <TouchableOpacity onPress={
                 () => {
-                    navigation.navigate('SearchPage')
+                    navigation.replace('SearchPage')
                 }
             }>
                 <Icon name="magnify" size={24} color="gray" />
@@ -44,7 +44,7 @@ const CFooter = ({ classname, children, type, navigation, page }) => {
             <Icon name="heart" size={24} color="gray" />
             <TouchableOpacity onPress={
                 () => {
-                    navigation.navigate('ProfilePage')
+                    navigation.replace('ProfilePage')
                 }
             }>
 

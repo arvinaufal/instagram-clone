@@ -75,7 +75,7 @@ export default function Register({ navigation }) {
                     </View>
                     <View className="mx-4 flex-row justify-center items-center">
                         <Text className="text-md">Have an account? </Text>
-                        <Text className="text-md font-bold text-sky-600" onPress={() => navigation.navigate('Login')}>Login</Text>
+                        <Text className="text-md font-bold text-sky-600" onPress={() => navigation.replace('Login')}>Login</Text>
                     </View>
 
                 </View>

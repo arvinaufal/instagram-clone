@@ -58,32 +58,32 @@ Implementasikan cache pada aplikasi GraphQL server yang sudah dibuat dengan deta
 ### React Native
 Buatlah aplikasi mobile React-Native dengan menggunakan expo. Aplikasi ini adalah client side dari challenge My Social Media App.
 Pada aplikasi ini kamu perlu membuat screen sebagai berikut:
-- [ ] Unauthenticate screen
-  - [ ] Login Screen: Menampilkan form untuk login
-  - [ ] Register Screen: Menampilkan form untuk register
+- [x] Unauthenticate screen
+  - [x] Login Screen: Menampilkan form untuk login
+  - [x] Register Screen: Menampilkan form untuk register
 
-- [ ] Authenticate screen
-  - [ ] Home screen: Menampilkan list post
-  - [ ] Create Post: Menampilkan form untuk menambahkan post baru
-  - [ ] Post Detail Screen: Menampilkan post detail berdasarkan id dan form untuk komentar
-  - [ ] Search Screen: Menampilkan form pencarian untuk mencari user (bisa digabung dengan screen lain)
-  - [ ] Profile Screen: Menampilkan profile user berdasarkan id, serta menampilkan jumlah followings dan followers user.
+- [x] Authenticate screen
+  - [x] Home screen: Menampilkan list post
+  - [x] Create Post: Menampilkan form untuk menambahkan post baru
+  - [x] Post Detail Screen: Menampilkan post detail berdasarkan id dan form untuk komentar
+  - [x] Search Screen: Menampilkan form pencarian untuk mencari user (bisa digabung dengan screen lain)
+  - [x] Profile Screen: Menampilkan profile user berdasarkan id, serta menampilkan jumlah followings dan followers user.
 
 
 ### React Navigation
- - [ ] Implementasikan navigasi pada screen yang sudah kamu buat dengan menggunakan React Navigation.
+ - [x] Implementasikan navigasi pada screen yang sudah kamu buat dengan menggunakan React Navigation.
 
 
 ## Day 4
 ### GraphQL - Apollo Client
 Lakukan komunikasi Aplikasi Mobile (react-native) menggunakan apollo client ke server GraphQL  yang sudah dibuat. Dan Implementasikan query dan mutation sesuai dengan kebutuhan.
-- [ ] Register (Mutation)
-- [ ] Login (Query)
-- [ ] Get Post (Query)
-- [ ] Add Post (Mutation)
-- [ ] Comment Post (Mutation)
-- [ ] Search User (Query)
-- [ ] Follow (Mutation)
-- [ ] Get User (Query)
-- [ ] Like Post (Mutation)
+- [x] Register (Mutation)
+- [x] Login (Query)
+- [x] Get Post (Query)
+- [x] Add Post (Mutation)
+- [x] Comment Post (Mutation)
+- [x] Search User (Query)
+- [x] Follow (Mutation)
+- [x] Get User (Query)
+- [x] Like Post (Mutation)
 

@@ -54,7 +54,7 @@ class User {
                     from: "users",
                     localField: "followers.followingId",
                     foreignField: "_id",
-                    as: "followers"
+                    as: "followings"
                   }
              },
             {
@@ -63,7 +63,7 @@ class User {
                     from: "users",
                     localField: "followings.followerId",
                     foreignField: "_id",
-                    as: "followings"
+                    as: "followers"
                   }
              },
             {

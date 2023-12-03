@@ -79,14 +79,12 @@ export default function Home({ navigation }) {
     const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
 
     useEffect(() => {
-        // console.log(loading, error, data)
         if (data) {
             setPosts(data.posts);
         }
     }, [data]);
 
     const handleAddPost = async () => {
-        console.log(addPostLoading)
         if (addPostLoading) return;
         await addPosting({ variables: formPost });
 
@@ -191,14 +189,14 @@ export default function Home({ navigation }) {
                 <View className={`bg-white border-t-slate-200 flex flex-row justify-around items-center ${isTyping ? 'hidden' : ''}`} style={{ height: '8%', borderTopWidth: 1 }}>
                     <TouchableOpacity onPress={
                         () => {
-                            navigation.navigate('Home')
+                            navigation.replace('Home')
                         }
                     }>
                         <Icon name="home" size={24} color="black" />
                     </TouchableOpacity>
                     <TouchableOpacity onPress={
                         () => {
-                            navigation.navigate('SearchPage')
+                            navigation.replace('SearchPage')
                         }
                     }>
                         <Icon name="magnify" size={24} color="gray" />
@@ -215,7 +213,7 @@ export default function Home({ navigation }) {
                     <Icon name="heart" size={24} color="gray" />
                     <TouchableOpacity onPress={
                         () => {
-                            navigation.navigate('ProfilePage')
+                            navigation.replace('ProfilePage')
                         }
                     }>
 
