@@ -18,13 +18,7 @@ const server = new ApolloServer({
 
 connect().then(() => {
     return startStandaloneServer(server, {
-        listen: { port: 3000 },
-        // context: async ({ req, res }) => ({
-        //     isAuthenticated: () => {
-        //         const access_token = req.headers.authorization ? req.headers.authorization.split(' ').at(-1) : 'NotExist';
-        //         return verifyToken(access_token);
-        //     }
-        // }),
+        listen: { port: process.env.port || 3000 },
         context: ({ req }) => {
             return {
                 authentication: async () => await authentication(req),
